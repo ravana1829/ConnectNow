@@ -1,0 +1,833 @@
+rules_version = '2';
+
+service cloud.firestore {
+
+  match /databases/{database}/documents {
+
+    /* =========================================================
+       BASIC HELPERS
+    ========================================================= */
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn()
+        && exists(
+          /databases/$(database)/documents/users/$(request.auth.uid)
+        )
+        && get(
+          /databases/$(database)/documents/users/$(request.auth.uid)
+        ).data.get("isAdmin", false) == true;
+    }
+
+
+    /* =========================================================
+       USER FIELD HELPERS
+    ========================================================= */
+
+    function userEditableFields() {
+      return [
+        "displayName",
+        "email",
+        "photoURL",
+        "age",
+        "gender",
+        "bio",
+
+        "status",
+        "onlineStatus",
+        "lastActiveAt",
+        "lastLogin",
+        "lastUpdated",
+        "updatedAt",
+
+        "diamonds",
+        "randomChatFreeCount",
+        "randomVideoChatFreeCount",
+
+        "friends",
+        "friendIds",
+        "friendRequests",
+        "sentRequests",
+        "blockedUsers",
+
+        "profileCompleted",
+        "isProfilePublic"
+      ];
+    }
+
+
+    function relationshipFields() {
+      return [
+        "friends",
+        "friendIds",
+        "friendRequests",
+        "sentRequests"
+      ];
+    }
+
+
+    /* =========================================================
+       USER FRIEND CHECK
+       ========================================================= */
+
+    function isFriend(userA, userB) {
+
+      return
+        (
+          exists(
+            /databases/$(database)/documents/users/$(userA)
+          )
+          &&
+          exists(
+            /databases/$(database)/documents/users/$(userB)
+          )
+        )
+        &&
+        (
+          userB in get(
+            /databases/$(database)/documents/users/$(userA)
+          ).data.get("friends", [])
+
+          ||
+
+          userB in get(
+            /databases/$(database)/documents/users/$(userA)
+          ).data.get("friendIds", [])
+
+          ||
+
+          userA in get(
+            /databases/$(database)/documents/users/$(userB)
+          ).data.get("friends", [])
+
+          ||
+
+          userA in get(
+            /databases/$(database)/documents/users/$(userB)
+          ).data.get("friendIds", [])
+        );
+    }
+
+
+    /* =========================================================
+       CONVERSATION HELPER
+    ========================================================= */
+
+    function isConversationParticipant(conversationId) {
+
+      return isSignedIn()
+        &&
+        exists(
+          /databases/$(database)/documents/conversations/$(conversationId)
+        )
+        &&
+        request.auth.uid in get(
+          /databases/$(database)/documents/conversations/$(conversationId)
+        ).data.get("participants", []);
+    }
+
+
+    /* =========================================================
+       CALL HELPER
+    ========================================================= */
+
+    function isCallParticipant(callId) {
+
+      return isSignedIn()
+        &&
+        exists(
+          /databases/$(database)/documents/calls/$(callId)
+        )
+        &&
+        (
+          get(
+            /databases/$(database)/documents/calls/$(callId)
+          ).data.get("caller", "") == request.auth.uid
+
+          ||
+
+          get(
+            /databases/$(database)/documents/calls/$(callId)
+          ).data.get("recipient", "") == request.auth.uid
+        );
+    }
+
+
+    /* =========================================================
+       USERS
+    ========================================================= */
+
+    match /users/{userId} {
+
+      /*
+        Current project searches users collection directly.
+        Therefore authenticated users can read user profiles.
+      */
+      allow read:
+        if isSignedIn();
+
+
+      /*
+        New profile
+      */
+      allow create:
+        if isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.displayName is string
+        && !request.resource.data.keys().hasAny([
+          "isAdmin",
+          "banned",
+          "banReason",
+          "bannedAt",
+          "deleted",
+          "deletedAt",
+          "adminSince"
+        ]);
+
+
+      /*
+        Own profile updates
+      */
+      allow update:
+        if
+          isAdmin()
+
+          ||
+
+          (
+            isSignedIn()
+            && request.auth.uid == userId
+            && request.resource.data.userId == resource.data.userId
+            && request.resource.data
+              .diff(resource.data)
+              .affectedKeys()
+              .hasOnly(userEditableFields())
+          )
+
+          ||
+
+          /*
+            Friend request / friend list updates
+            made on another user's document.
+          */
+          (
+            isSignedIn()
+            && request.auth.uid != userId
+            && resource.data.get("isAdmin", false) != true
+            && request.resource.data.userId == resource.data.userId
+            && request.resource.data
+              .diff(resource.data)
+              .affectedKeys()
+              .hasOnly(relationshipFields())
+          );
+
+
+      /*
+        Own account delete
+      */
+      allow delete:
+        if isSignedIn()
+        && request.auth.uid == userId;
+    }
+
+
+    /* =========================================================
+       UNIQUE USERNAMES
+    ========================================================= */
+
+    match /usernames/{usernameId} {
+
+      /*
+        Needed by login transactions
+      */
+      allow get:
+        if isSignedIn();
+
+
+      /*
+        Do not allow collection listing
+      */
+      allow list:
+        if false;
+
+
+      /*
+        Create username only for own Firebase UID
+      */
+      allow create:
+        if isSignedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.displayName is string;
+
+
+      /*
+        Update username only by its owner
+      */
+      allow update:
+        if isSignedIn()
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.uid == request.auth.uid;
+
+
+      /*
+        Delete username only by owner
+      */
+      allow delete:
+        if isSignedIn()
+        && resource.data.uid == request.auth.uid;
+    }
+
+
+    /* =========================================================
+       FRIEND / PRIVATE CONVERSATIONS
+    ========================================================= */
+
+    match /conversations/{conversationId} {
+
+      /*
+        User can read only conversations where they are a participant.
+        Admin can read all.
+      */
+      allow read:
+        if isAdmin()
+        ||
+        (
+          isSignedIn()
+          && request.auth.uid in resource.data.get("participants", [])
+        );
+
+
+      /*
+        Create a conversation
+      */
+      allow create:
+        if isSignedIn()
+        && request.resource.data.participants is list
+        && request.resource.data.participants.size() == 2
+        && request.auth.uid in request.resource.data.participants;
+
+
+      /*
+        Update only conversation metadata.
+      */
+      allow update:
+        if isAdmin()
+        ||
+        (
+          isSignedIn()
+          && request.auth.uid in resource.data.get("participants", [])
+          && request.resource.data.participants
+              == resource.data.participants
+          && request.resource.data
+              .diff(resource.data)
+              .affectedKeys()
+              .hasOnly([
+                "lastMessage",
+                "lastMessageTime",
+                "participantNames"
+              ])
+        );
+
+
+      allow delete:
+        if isAdmin()
+        ||
+        (
+          isSignedIn()
+          && request.auth.uid in resource.data.get("participants", [])
+        );
+
+
+      /* =======================================================
+         PRIVATE CHAT MESSAGES
+      ======================================================= */
+
+      match /messages/{messageId} {
+
+        allow read:
+          if isAdmin()
+          || isConversationParticipant(conversationId);
+
+
+        allow create:
+          if isConversationParticipant(conversationId)
+          && request.resource.data.senderId == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 5000;
+
+
+        allow update:
+          if isAdmin()
+          || isConversationParticipant(conversationId);
+
+
+        /*
+          Current project has "Clear Chat".
+          Therefore participants can delete messages.
+        */
+        allow delete:
+          if isAdmin()
+          || isConversationParticipant(conversationId);
+      }
+    }
+
+
+    /* =========================================================
+       PRIVATE VIDEO CALLS
+    ========================================================= */
+
+    match /calls/{callId} {
+
+      /*
+        Allow the incoming listener to attach before the
+        call document exists. Once created, only caller,
+        recipient, or admin can read.
+      */
+      allow read:
+        if isAdmin()
+        ||
+        (
+          isSignedIn()
+          &&
+          (
+            !exists(
+              /databases/$(database)/documents/calls/$(callId)
+            )
+
+            ||
+
+            isCallParticipant(callId)
+          )
+        );
+
+
+      /*
+        Caller creates the call document.
+      */
+      allow create:
+        if isSignedIn()
+        && request.resource.data.caller is string
+        && request.resource.data.recipient is string
+        && request.resource.data.caller != request.resource.data.recipient
+        && (
+          request.resource.data.caller == request.auth.uid
+          ||
+          request.resource.data.recipient == request.auth.uid
+        );
+
+
+      /*
+        Caller / recipient update signaling data.
+      */
+      allow update:
+        if isAdmin()
+        || isCallParticipant(callId);
+
+
+      allow delete:
+        if isAdmin()
+        || isCallParticipant(callId);
+    }
+
+
+    /* =========================================================
+       RANDOM TEXT CHAT
+    ========================================================= */
+
+    match /randomMatches/{matchId} {
+
+      /*
+        Match document can be read by either matched user.
+      */
+      allow read:
+        if isAdmin()
+        ||
+        (
+          isSignedIn()
+          &&
+          (
+            resource.data.get("user1", "") == request.auth.uid
+            ||
+            resource.data.get("user2", "") == request.auth.uid
+          )
+        );
+
+
+      /*
+        Either matched user can create the match record.
+      */
+      allow create:
+        if isSignedIn()
+        && request.resource.data.get("user1", "") is string
+        && request.resource.data.get("user2", "") is string
+        && request.resource.data.user1 != request.resource.data.user2
+        && (
+          request.resource.data.user1 == request.auth.uid
+          ||
+          request.resource.data.user2 == request.auth.uid
+        );
+
+
+      /*
+        Matched users can update messages / status.
+      */
+      allow update:
+        if isAdmin()
+        ||
+        (
+          isSignedIn()
+          &&
+          (
+            resource.data.get("user1", "") == request.auth.uid
+            ||
+            resource.data.get("user2", "") == request.auth.uid
+          )
+        );
+
+
+      allow delete:
+        if isAdmin()
+        ||
+        (
+          isSignedIn()
+          &&
+          (
+            resource.data.get("user1", "") == request.auth.uid
+            ||
+            resource.data.get("user2", "") == request.auth.uid
+          )
+        );
+    }
+
+
+    /* =========================================================
+       RANDOM VIDEO CALL
+    ========================================================= */
+
+    match /randomVideoCalls/{matchId} {
+
+      /*
+        Only matched caller / recipient can read.
+      */
+      allow read:
+        if isAdmin()
+        ||
+        (
+          isSignedIn()
+          &&
+          (
+            resource.data.get("caller", "") == request.auth.uid
+            ||
+            resource.data.get("recipient", "") == request.auth.uid
+          )
+        );
+
+
+      /*
+        Create random video call record.
+      */
+      allow create:
+        if isSignedIn()
+        && request.resource.data.get("caller", "") is string
+        && request.resource.data.get("recipient", "") is string
+        && request.resource.data.caller != request.resource.data.recipient
+        && (
+          request.resource.data.caller == request.auth.uid
+          ||
+          request.resource.data.recipient == request.auth.uid
+        );
+
+
+      /*
+        WebRTC offer / answer / ICE / status updates.
+      */
+      allow update:
+        if isAdmin()
+        ||
+        (
+          isSignedIn()
+          &&
+          (
+            resource.data.get("caller", "") == request.auth.uid
+            ||
+            resource.data.get("recipient", "") == request.auth.uid
+          )
+        );
+
+
+      allow delete:
+        if isAdmin()
+        ||
+        (
+          isSignedIn()
+          &&
+          (
+            resource.data.get("caller", "") == request.auth.uid
+            ||
+            resource.data.get("recipient", "") == request.auth.uid
+          )
+        );
+    }
+
+
+    /* =========================================================
+       NOTIFICATIONS
+    ========================================================= */
+
+    match /notifications/{userId} {
+
+      match /items/{notificationId} {
+
+        /*
+          User can only read their own notifications.
+        */
+        allow read:
+          if isAdmin()
+          ||
+          (
+            isSignedIn()
+            && request.auth.uid == userId
+          );
+
+
+        /*
+          Current NotificationManager can send notification
+          to another authenticated user.
+        */
+        allow create:
+          if isSignedIn();
+
+
+        allow update:
+          if isAdmin()
+          ||
+          (
+            isSignedIn()
+            && request.auth.uid == userId
+          );
+
+
+        allow delete:
+          if isAdmin()
+          ||
+          (
+            isSignedIn()
+            && request.auth.uid == userId
+          );
+      }
+    }
+
+
+    /* =========================================================
+       DAILY TASKS
+    ========================================================= */
+
+    match /dailyTasks/{userId} {
+
+      match /tasks/{taskId} {
+
+        allow read:
+          if isAdmin()
+          ||
+          (
+            isSignedIn()
+            && request.auth.uid == userId
+          );
+
+
+        allow create:
+          if isSignedIn()
+          && request.auth.uid == userId;
+
+
+        allow update:
+          if isSignedIn()
+          && request.auth.uid == userId;
+
+
+        allow delete:
+          if isSignedIn()
+          && request.auth.uid == userId;
+      }
+    }
+
+
+    /* =========================================================
+       REWARD HISTORY
+    ========================================================= */
+
+    match /rewards/{rewardId} {
+
+      /*
+        User can see own rewards.
+        Admin can see all rewards.
+      */
+      allow read:
+        if isAdmin()
+        ||
+        (
+          isSignedIn()
+          && resource.data.get("userId", "") == request.auth.uid
+        );
+
+
+      /*
+        Reward creation only for the currently signed-in user.
+      */
+      allow create:
+        if isSignedIn()
+        && request.resource.data.get("userId", "") == request.auth.uid
+        && request.resource.data.get("reward", 0) is int;
+
+
+      allow update:
+        if isAdmin();
+
+
+      allow delete:
+        if isAdmin();
+    }
+
+
+    /* =========================================================
+       GROUPS
+    ========================================================= */
+
+    match /groups/{groupId} {
+
+      /*
+        Public group metadata can be read by authenticated users.
+      */
+      allow read:
+        if isSignedIn();
+
+
+      /*
+        User can create a group they own.
+      */
+      allow create:
+        if isSignedIn()
+        && request.resource.data.get("ownerId", "") == request.auth.uid
+        && request.resource.data.memberIds is list
+        && request.auth.uid in request.resource.data.memberIds;
+
+
+      /*
+        Owner can update group.
+      */
+      allow update:
+        if isAdmin()
+        ||
+        (
+          isSignedIn()
+          && resource.data.get("ownerId", "") == request.auth.uid
+          && request.resource.data.get("ownerId", "")
+              == resource.data.get("ownerId", "")
+        );
+
+
+      allow delete:
+        if isAdmin()
+        ||
+        (
+          isSignedIn()
+          && resource.data.get("ownerId", "") == request.auth.uid
+        );
+    }
+
+
+    /* =========================================================
+       REPORTS
+    ========================================================= */
+
+    match /reports/{reportId} {
+
+      /*
+        Admins can review all reports.
+        Reporter can read their own report.
+      */
+      allow read:
+        if isAdmin()
+        ||
+        (
+          isSignedIn()
+          && resource.data.get("reportedBy", "") == request.auth.uid
+        );
+
+
+      /*
+        Any signed-in user can submit a report,
+        but reportedBy must match their UID.
+      */
+      allow create:
+        if isSignedIn()
+        && request.resource.data.get("reportedBy", "") == request.auth.uid
+        && request.resource.data.get("reportedUser", "") is string
+        && request.resource.data.get("reason", "") is string;
+
+
+      /*
+        Only admin can resolve / modify reports.
+      */
+      allow update:
+        if isAdmin();
+
+
+      allow delete:
+        if isAdmin();
+    }
+
+
+    /* =========================================================
+       TRANSACTIONS
+    ========================================================= */
+
+    match /transactions/{transactionId} {
+
+      /*
+        User sees their own transactions.
+        Admin sees all.
+      */
+      allow read:
+        if isAdmin()
+        ||
+        (
+          isSignedIn()
+          && resource.data.get("userId", "") == request.auth.uid
+        );
+
+
+      /*
+        Current client-side payment handler records transaction
+        under the signed-in user's UID.
+      */
+      allow create:
+        if isSignedIn()
+        && request.resource.data.get("userId", "") == request.auth.uid;
+
+
+      allow update:
+        if isAdmin();
+
+
+      allow delete:
+        if isAdmin();
+    }
+
+
+    /* =========================================================
+       EVERYTHING ELSE = DENY
+    ========================================================= */
+
+    match /{document=**} {
+
+      allow read, write:
+        if false;
+    }
+  }
+}

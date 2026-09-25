@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>ConnectNow - Home</title>
+
+  <link rel="stylesheet" href="./css/style.css" />
+  <script type="module" src="./js/home.js"></script>
+</head>
+
+<body>
+
+  <!-- =====================================================
+       TOP NAVIGATION
+       ===================================================== -->
+
+  <header class="topbar">
+
+    <div class="logo-wrap">
+      <a href="index.html" class="logo">
+        <img src="./assets/logo.png" alt="ConnectNow" class="logo-img" />
+        <span>ConnectNow</span>
+      </a>
+    </div>
+
+
+    <!-- Desktop Navigation -->
+
+    <nav class="main-nav" id="mainNav">
+
+      <a
+        href="index.html"
+        class="nav-link active"
+      >
+        Home
+      </a>
+
+      <a
+        href="chat.html"
+        class="nav-link"
+      >
+        Random Chat
+      </a>
+
+      <a
+        href="video-call.html"
+        class="nav-link"
+      >
+        Video Call
+      </a>
+
+      <a
+        href="group-chat.html"
+        class="nav-link"
+      >
+        Group Chat
+      </a>
+
+
+      <!-- Wallet -->
+
+      <a
+        href="wallet.html"
+        class="nav-link wallet-link"
+      >
+        <span>💎</span>
+        Wallet
+      </a>
+
+
+      <!-- Rewards Dropdown -->
+
+      <div class="nav-dropdown">
+
+        <button
+          type="button"
+          class="nav-dropdown-btn"
+          id="rewardsMenuBtn"
+        >
+          Rewards
+          <span class="dropdown-arrow">⌄</span>
+        </button>
+
+        <div
+          class="dropdown-menu"
+          id="rewardsMenu"
+        >
+
+          <a
+            href="daily-reward.html"
+            class="dropdown-item"
+          >
+            <span class="dropdown-icon">🎁</span>
+
+            <span>
+              <strong>Daily Reward</strong>
+              <small>Claim your daily reward</small>
+            </span>
+          </a>
+
+
+          <a
+            href="daily-tasks.html"
+            class="dropdown-item"
+          >
+            <span class="dropdown-icon">✅</span>
+
+            <span>
+              <strong>Daily Tasks</strong>
+              <small>Complete tasks and earn diamonds</small>
+            </span>
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <!-- Profile Dropdown -->
+
+      <div class="nav-dropdown">
+
+        <button
+          type="button"
+          class="nav-profile-btn"
+          id="profileMenuBtn"
+        >
+
+          <div
+            class="nav-user-avatar"
+            id="navUserAvatar"
+          >
+            C
+          </div>
+
+          <span
+            class="nav-user-name"
+            id="navUserName"
+          >
+            ConnectNow User
+          </span>
+
+          <span class="dropdown-arrow">
+            ⌄
+          </span>
+
+        </button>
+
+
+        <div
+          class="dropdown-menu profile-dropdown"
+          id="profileMenu"
+        >
+
+          <div class="dropdown-profile-header">
+
+            <div
+              class="dropdown-large-avatar"
+              id="dropdownUserAvatar"
+            >
+              C
+            </div>
+
+            <div>
+
+              <strong id="dropdownUserName">
+                ConnectNow User
+              </strong>
+
+              <small id="dropdownUserEmail">
+                user@example.com
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <a
+            href="profile.html"
+            class="dropdown-item"
+          >
+            <span class="dropdown-icon">👤</span>
+
+            <span>
+              <strong>My Profile</strong>
+              <small>View and edit your profile</small>
+            </span>
+          </a>
+
+
+          <button
+            type="button"
+            class="dropdown-item logout-dropdown-item"
+            id="dropdownLogoutBtn"
+          >
+
+            <span class="dropdown-icon">
+              🚪
+            </span>
+
+            <span>
+              <strong>Logout</strong>
+              <small>Sign out from ConnectNow</small>
+            </span>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </nav>
+
+
+    <!-- Mobile Menu Button -->
+
+    <button
+      type="button"
+      class="mobile-menu-btn"
+      id="mobileMenuBtn"
+      aria-label="Open menu"
+    >
+      ☰
+    </button>
+
+  </header>
+
+
+  <!-- =====================================================
+       MOBILE NAVIGATION
+       ===================================================== -->
+
+  <div
+    class="mobile-nav"
+    id="mobileNav"
+  >
+
+    <a
+      href="index.html"
+      class="mobile-nav-link active"
+    >
+      🏠 Home
+    </a>
+
+    <a
+      href="chat.html"
+      class="mobile-nav-link"
+    >
+      💬 Random Chat
+    </a>
+
+    <a
+      href="video-call.html"
+      class="mobile-nav-link"
+    >
+      📹 Video Call
+    </a>
+
+    <a
+      href="group-chat.html"
+      class="mobile-nav-link"
+    >
+      👥 Group Chat
+    </a>
+
+    <a
+      href="wallet.html"
+      class="mobile-nav-link"
+    >
+      💎 Wallet
+    </a>
+
+    <a
+      href="daily-reward.html"
+      class="mobile-nav-link"
+    >
+      🎁 Daily Reward
+    </a>
+
+    <a
+      href="daily-tasks.html"
+      class="mobile-nav-link"
+    >
+      ✅ Daily Tasks
+    </a>
+
+    <a
+      href="profile.html"
+      class="mobile-nav-link"
+    >
+      👤 My Profile
+    </a>
+
+    <button
+      type="button"
+      class="mobile-nav-link mobile-logout"
+      id="mobileLogoutBtn"
+    >
+      🚪 Logout
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       MAIN HOME PAGE
+       ===================================================== -->
+
+  <main class="home-container">
+
+
+    <!-- ===================================================
+         HERO
+         =================================================== -->
+
+    <section class="hero-section">
+
+      <div class="hero-content">
+
+        <div class="badge">
+          FREE SOCIAL PLATFORM
+        </div>
+
+        <h1>
+          Connect with someone
+          <br />
+          new.
+        </h1>
+
+        <p>
+          Meet new people through random chat,
+          video calls and group conversations.
+          Choose how you want to connect and
+          start talking instantly.
+        </p>
+
+
+        <!-- Hero Actions -->
+
+        <div class="action-grid">
+
+
+          <!-- Random Chat -->
+
+          <button
+            type="button"
+            class="main-action"
+            id="randomChatBtn"
+          >
+
+            <span class="action-icon">
+              💬
+            </span>
+
+            <span class="action-text">
+
+              <strong>
+                Random Chat
+              </strong>
+
+              <small>
+                Start a private conversation
+              </small>
+
+            </span>
+
+          </button>
+
+
+          <!-- Video Call -->
+
+          <button
+            type="button"
+            class="main-action"
+            id="videoCallBtn"
+          >
+
+            <span class="action-icon">
+              📹
+            </span>
+
+            <span class="action-text">
+
+              <strong>
+                Random Video Call
+              </strong>
+
+              <small>
+                Meet someone live
+              </small>
+
+            </span>
+
+          </button>
+
+
+          <!-- Group Chat -->
+
+          <button
+            type="button"
+            class="main-action"
+            id="groupChatBtn"
+          >
+
+            <span class="action-icon">
+              👥
+            </span>
+
+            <span class="action-text">
+
+              <strong>
+                Group Chat
+              </strong>
+
+              <small>
+                Join a public conversation
+              </small>
+
+            </span>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         WALLET / ACCOUNT SUMMARY
+         =================================================== -->
+
+    <section class="wallet-summary-section">
+
+      <div class="wallet-summary-card">
+
+        <div class="wallet-summary-left">
+
+          <div class="wallet-icon">
+            💎
+          </div>
+
+          <div>
+
+            <span class="summary-label">
+              Your Diamonds
+            </span>
+
+            <strong
+              class="diamond-balance"
+              id="diamondBalance"
+            >
+              0
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="wallet-summary-right">
+
+          <a
+            href="wallet.html"
+            class="summary-btn primary-summary-btn"
+          >
+            Open Wallet
+          </a>
+
+          <a
+            href="daily-reward.html"
+            class="summary-btn"
+          >
+            🎁 Claim Reward
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         CONNECT OPTIONS
+         =================================================== -->
+
+    <section class="features-section">
+
+      <div class="section-heading">
+
+        <span class="section-label">
+          CONNECT YOUR WAY
+        </span>
+
+        <h2>
+          Choose how you want to connect
+        </h2>
+
+        <p>
+          ConnectNow gives you different ways
+          to meet and talk with people.
+        </p>
+
+      </div>
+
+
+      <div class="features-grid">
+
+
+        <!-- Random Chat -->
+
+        <article class="feature-card">
+
+          <div class="feature-icon">
+            💬
+          </div>
+
+          <h3>
+            Random Chat
+          </h3>
+
+          <p>
+            Start a random conversation
+            and meet someone new.
+          </p>
+
+          <button
+            type="button"
+            class="feature-btn"
+            id="featureRandomChatBtn"
+          >
+            Start Chat
+          </button>
+
+        </article>
+
+
+        <!-- Random Video -->
+
+        <article class="feature-card">
+
+          <div class="feature-icon">
+            📹
+          </div>
+
+          <h3>
+            Random Video Call
+          </h3>
+
+          <p>
+            Meet someone live through
+            a random video connection.
+          </p>
+
+          <button
+            type="button"
+            class="feature-btn"
+            id="featureVideoBtn"
+          >
+            Start Video
+          </button>
+
+        </article>
+
+
+        <!-- Group -->
+
+        <article class="feature-card">
+
+          <div class="feature-icon">
+            👥
+          </div>
+
+          <h3>
+            Group Community
+          </h3>
+
+          <p>
+            Join communities, chat with
+            members and discover profiles.
+          </p>
+
+          <button
+            type="button"
+            class="feature-btn"
+            id="featureGroupBtn"
+          >
+            Open Groups
+          </button>
+
+        </article>
+
+
+        <!-- Profile -->
+
+        <article class="feature-card">
+
+          <div class="feature-icon">
+            👤
+          </div>
+
+          <h3>
+            Your Profile
+          </h3>
+
+          <p>
+            Manage your profile and let
+            people know more about you.
+          </p>
+
+          <button
+            type="button"
+            class="feature-btn"
+            id="featureProfileBtn"
+          >
+            View Profile
+          </button>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         REWARDS
+         =================================================== -->
+
+    <section class="rewards-section">
+
+      <div class="section-heading">
+
+        <span class="section-label">
+          EARN MORE
+        </span>
+
+        <h2>
+          Rewards & Daily Activities
+        </h2>
+
+        <p>
+          Complete activities and collect
+          diamonds for your ConnectNow account.
+        </p>
+
+      </div>
+
+
+      <div class="reward-grid">
+
+
+        <!-- Daily Reward -->
+
+        <article class="reward-card daily-reward-card">
+
+          <div class="reward-card-icon">
+            🎁
+          </div>
+
+          <div class="reward-card-content">
+
+            <span class="reward-card-label">
+              DAILY REWARD
+            </span>
+
+            <h3>
+              Daily Check-in
+            </h3>
+
+            <p>
+              Come back every day and
+              collect your daily reward.
+            </p>
+
+            <a
+              href="daily-reward.html"
+              class="reward-btn"
+            >
+              Claim Daily Reward
+            </a>
+
+          </div>
+
+        </article>
+
+
+        <!-- Daily Tasks -->
+
+        <article class="reward-card tasks-card">
+
+          <div class="reward-card-icon">
+            ✅
+          </div>
+
+          <div class="reward-card-content">
+
+            <span class="reward-card-label">
+              DAILY TASKS
+            </span>
+
+            <h3>
+              Complete Tasks
+            </h3>
+
+            <p>
+              Finish daily activities and
+              earn additional diamonds.
+            </p>
+
+            <a
+              href="daily-tasks.html"
+              class="reward-btn"
+            >
+              View Daily Tasks
+            </a>
+
+          </div>
+
+        </article>
+
+
+        <!-- Wallet -->
+
+        <article class="reward-card wallet-card">
+
+          <div class="reward-card-icon">
+            💎
+          </div>
+
+          <div class="reward-card-content">
+
+            <span class="reward-card-label">
+              DIAMONDS
+            </span>
+
+            <h3>
+              Manage Wallet
+            </h3>
+
+            <p>
+              Buy diamonds, view your balance
+              and check your transactions.
+            </p>
+
+            <a
+              href="wallet.html"
+              class="reward-btn"
+            >
+              Open Wallet
+            </a>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         HOW IT WORKS
+         =================================================== -->
+
+    <section class="how-section">
+
+      <div class="section-heading">
+
+        <span class="section-label">
+          SIMPLE & EASY
+        </span>
+
+        <h2>
+          How ConnectNow works
+        </h2>
+
+      </div>
+
+
+      <div class="steps-grid">
+
+
+        <article class="step-card">
+
+          <div class="step-number">
+            01
+          </div>
+
+          <div class="step-icon">
+            👤
+          </div>
+
+          <h3>
+            Create your profile
+          </h3>
+
+          <p>
+            Add your name, photo and bio
+            so your community profile feels personal.
+          </p>
+
+        </article>
+
+
+        <article class="step-card">
+
+          <div class="step-number">
+            02
+          </div>
+
+          <div class="step-icon">
+            💬
+          </div>
+
+          <h3>
+            Choose how to connect
+          </h3>
+
+          <p>
+            Use Random Chat, Video Call
+            or join a Group Community.
+          </p>
+
+        </article>
+
+
+        <article class="step-card">
+
+          <div class="step-number">
+            03
+          </div>
+
+          <div class="step-icon">
+            ❤️
+          </div>
+
+          <h3>
+            Meet & connect
+          </h3>
+
+          <p>
+            Talk respectfully, discover people
+            and build new connections.
+          </p>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         SAFETY
+         =================================================== -->
+
+    <section class="safety-section">
+
+      <div class="safety-content">
+
+        <span class="section-label">
+          STAY SAFE
+        </span>
+
+        <h2>
+          Connect responsibly
+        </h2>
+
+        <p>
+          Protect your privacy and use the
+          safety tools whenever you need them.
+        </p>
+
+      </div>
+
+
+      <div class="safety-grid">
+
+        <article class="safety-card">
+
+          <span class="safety-icon">
+            🔒
+          </span>
+
+          <h3>
+            Privacy
+          </h3>
+
+          <p>
+            Control the information you
+            share with other people.
+          </p>
+
+        </article>
+
+
+        <article class="safety-card">
+
+          <span class="safety-icon">
+            🚫
+          </span>
+
+          <h3>
+            Block
+          </h3>
+
+          <p>
+            Block people you do not
+            want to interact with.
+          </p>
+
+        </article>
+
+
+        <article class="safety-card">
+
+          <span class="safety-icon">
+            ⚠️
+          </span>
+
+          <h3>
+            Report
+          </h3>
+
+          <p>
+            Report inappropriate users,
+            messages or activity.
+          </p>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         PROFILE CTA
+         =================================================== -->
+
+    <section class="profile-cta">
+
+      <div class="profile-cta-content">
+
+        <span class="section-label">
+          YOUR ACCOUNT
+        </span>
+
+        <h2>
+          Make your ConnectNow profile yours.
+        </h2>
+
+        <p>
+          Add a profile photo, bio and other
+          information to personalize your account.
+        </p>
+
+      </div>
+
+
+      <div class="profile-cta-actions">
+
+        <a
+          href="profile.html"
+          class="cta-btn primary-cta"
+        >
+          👤 Open Profile
+        </a>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+
+  <footer class="footer">
+
+    <div class="footer-inner">
+
+      <div class="footer-brand">
+
+        <div class="logo" style="display: flex; align-items: center; gap: 12px; font-size: 21px;">
+          <img src="./assets/logo.png" alt="ConnectNow" class="logo-img" style="height: 30px; width: 30px;" />
+          <span>ConnectNow</span>
+        </div>
+
+        <p>
+          Connect. Chat. Meet. Discover.
+        </p>
+
+      </div>
+
+
+      <div class="footer-links">
+
+        <a href="index.html">
+          Home
+        </a>
+
+        <a href="group-chat.html">
+          Groups
+        </a>
+
+        <a href="profile.html">
+          Profile
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+      <span>
+        © 2026 ConnectNow
+      </span>
+
+      <span>
+        Connect responsibly.
+      </span>
+
+    </div>
+
+  </footer>
+
+
+  <!-- =====================================================
+       JAVASCRIPT
+       ===================================================== -->
+
+  <script type="module" src="./js/home.js"></script>
+
+</body>
+</html>

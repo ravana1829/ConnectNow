@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ConnectNow - Profile</title>
+    <link rel="stylesheet" href="./css/profile.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           HEADER
+        ========================== */
+
+        .topbar {
+            width: 100%;
+            height: 70px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 800;
+            color: #6d28d9;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #ec4899;
+        }
+
+        .top-user {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .top-user img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ede9fe;
+        }
+
+        /* =========================
+           MAIN
+        ========================== */
+
+        .page-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+            color: #111827;
+        }
+
+        .page-title p {
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        /* =========================
+           PROFILE LAYOUT
+        ========================== */
+
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        /* =========================
+           PROFILE SUMMARY
+        ========================== */
+
+        .profile-summary {
+            padding: 30px 20px;
+            text-align: center;
+            height: fit-content;
+        }
+
+        .profile-photo-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 18px;
+        }
+
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #ede9fe;
+            background: #f3f4f6;
+        }
+
+        .online-dot {
+            position: absolute;
+            right: 5px;
+            bottom: 8px;
+            width: 19px;
+            height: 19px;
+            background: #22c55e;
+            border: 3px solid white;
+            border-radius: 50%;
+        }
+
+        .profile-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 5px;
+            word-break: break-word;
+        }
+
+        .profile-email {
+            font-size: 13px;
+            color: #6b7280;
+            word-break: break-word;
+            margin-bottom: 20px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #ecfdf5;
+            color: #15803d;
+            padding: 7px 13px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            background: #22c55e;
+            border-radius: 50%;
+        }
+
+        .user-id-box {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 13px;
+            text-align: left;
+        }
+
+        .user-id-label {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .user-id-value {
+            font-size: 12px;
+            color: #374151;
+            word-break: break-all;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           FORM
+        ========================== */
+
+        .profile-form {
+            padding: 30px;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-heading h2 {
+            font-size: 21px;
+            color: #111827;
+        }
+
+        .section-heading p {
+            color: #6b7280;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .edit-button {
+            border: none;
+            background: #ede9fe;
+            color: #6d28d9;
+            padding: 10px 17px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .edit-button:hover {
+            background: #ddd6fe;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 11px;
+            background: #f9fafb;
+            color: #111827;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: #8b5cf6;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.10);
+        }
+
+        .form-control:disabled {
+            color: #6b7280;
+            cursor: not-allowed;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 5px;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================== */
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: #6d28d9;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5b21b6;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-danger {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .btn-danger:hover {
+            background: #fecaca;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* =========================
+           QUICK LINKS
+        ========================== */
+
+        .quick-links {
+            margin-top: 25px;
+            padding: 20px;
+        }
+
+        .quick-links h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .quick-link {
+            text-decoration: none;
+            color: #374151;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .quick-link:hover {
+            background: #ede9fe;
+            color: #6d28d9;
+            border-color: #ddd6fe;
+        }
+
+        /* =========================
+           MESSAGE
+        ========================== */
+
+        .message {
+            margin-bottom: 20px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .message.success {
+            display: block;
+            background: #ecfdf5;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+        }
+
+        .message.error {
+            display: block;
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        /* =========================
+           LOADING
+        ========================== */
+
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #ffffff;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .loader {
+            width: 42px;
+            height: 42px;
+            border: 4px solid #ede9fe;
+            border-top-color: #6d28d9;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loading-text {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (max-width: 850px) {
+
+            .profile-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .link-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .topbar {
+                height: 62px;
+                padding: 0 15px;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .top-user span {
+                display: none;
+            }
+
+            .top-user img {
+                width: 35px;
+                height: 35px;
+            }
+
+            .page-container {
+                margin: 22px auto;
+                padding: 0 12px;
+            }
+
+            .page-title h1 {
+                font-size: 25px;
+            }
+
+            .profile-form {
+                padding: 20px;
+            }
+
+            .profile-summary {
+                padding: 25px 18px;
+            }
+
+            .section-heading {
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOADING -->
+
+    <div class="loading-screen" id="loadingScreen">
+
+        <div class="loader"></div>
+
+        <div class="loading-text">
+            Loading your profile...
+        </div>
+
+    </div>
+
+
+    <!-- HEADER -->
+
+    <header class="topbar">
+
+        <a href="index.html" class="logo">
+            Connect<span>Now</span>
+        </a>
+
+        <div class="top-user">
+
+            <span id="topUserName">
+                User
+            </span>
+
+            <img
+                id="topUserPhoto"
+                src=""
+                alt="Profile"
+            >
+
+        </div>
+
+    </header>
+
+
+    <!-- MAIN -->
+
+    <main class="page-container">
+
+        <div class="page-title">
+
+            <h1>
+                My Profile
+            </h1>
+
+            <p>
+                Manage your ConnectNow profile information.
+            </p>
+
+        </div>
+
+
+        <div
+            id="messageBox"
+            class="message">
+        </div>
+
+
+        <div class="profile-layout">
+
+
+            <!-- PROFILE SUMMARY -->
+
+            <div class="card profile-summary">
+
+                <div class="profile-photo-wrapper">
+
+                    <img
+                        id="profilePhoto"
+                        class="profile-photo"
+                        src=""
+                        alt="Profile Photo"
+                    >
+
+                    <div class="online-dot"></div>
+
+                </div>
+
+
+                <div
+                    id="profileName"
+                    class="profile-name">
+                    ConnectNow User
+                </div>
+
+
+                <div
+                    id="profileEmail"
+                    class="profile-email">
+                    Loading...
+                </div>
+
+
+                <div class="status-badge">
+
+                    <span class="status-dot"></span>
+
+                    Online
+
+                </div>
+
+
+                <div class="user-id-box">
+
+                    <div class="user-id-label">
+                        User ID
+                    </div>
+
+                    <div
+                        id="userIdValue"
+                        class="user-id-value">
+                        Loading...
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PROFILE FORM -->
+
+            <div class="card profile-form">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <h2>
+                            Profile Information
+                        </h2>
+
+                        <p>
+                            Update your public profile details.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        id="editButton"
+                        class="edit-button">
+
+                        Edit Profile
+
+                    </button>
+
+                </div>
+
+
+                <!-- DISPLAY NAME -->
+
+                <div class="form-group">
+
+                    <label for="displayName">
+                        Display Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="displayName"
+                        class="form-control"
+                        placeholder="Enter your name"
+                        maxlength="50"
+                        disabled
+                    >
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        class="form-control"
+                        disabled
+                    >
+
+                </div>
+
+
+                <!-- GENDER -->
+
+                <div class="form-group">
+
+                    <label for="gender">
+                        Gender
+                    </label>
+
+                    <select
+                        id="gender"
+                        class="form-control"
+                        disabled>
+
+                        <option value="">
+                            Select gender
+                        </option>
+
+                        <option value="Male">
+                            Male
+                        </option>
+
+                        <option value="Female">
+                            Female
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                        <option value="Prefer not to say">
+                            Prefer not to say
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- BIO -->
+
+                <div class="form-group">
+
+                    <label for="bio">
+                        About Me
+                    </label>
+
+                    <textarea
+                        id="bio"
+                        class="form-control"
+                        maxlength="300"
+                        placeholder="Tell people a little about yourself..."
+                        disabled></textarea>
+
+                    <div
+                        id="charCount"
+                        class="char-count">
+                        0 / 300
+                    </div>
+
+                </div>
+
+
+                <!-- FORM BUTTONS -->
+
+                <div
+                    id="formActions"
+                    class="form-actions hidden">
+
+                    <button
+                        id="saveButton"
+                        class="btn btn-primary">
+
+                        Save Profile
+
+                    </button>
+
+
+                    <button
+                        id="cancelButton"
+                        class="btn btn-secondary">
+
+                        Cancel
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- QUICK LINKS -->
+
+        <div class="card quick-links">
+
+            <h3>
+                ConnectNow
+            </h3>
+
+
+            <div class="link-grid">
+
+                <a
+                    href="index.html"
+                    class="quick-link">
+                    Home
+                </a>
+
+                <a
+                    href="random-chat.html"
+                    class="quick-link">
+                    Random Chat
+                </a>
+
+                <a
+                    href="group-chat.html"
+                    class="quick-link">
+                    Group Chat
+                </a>
+
+                <a
+                    href="video-call.html"
+                    class="quick-link">
+                    Video Call
+                </a>
+
+            </div>
+
+
+            <div style="margin-top:12px;">
+
+                <button
+                    id="logoutButton"
+                    class="btn btn-danger"
+                    style="width:100%;">
+
+                    Logout
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- FIREBASE -->
+
+    <script type="module">
+
+        import {
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+        import {
+            doc,
+            getDoc,
+            setDoc,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+        import {
+            auth,
+            db
+        } from "./js/firebase-config.js";
+
+
+        /* =========================
+           ELEMENTS
+        ========================== */
+
+        const loadingScreen =
+            document.getElementById("loadingScreen");
+
+        const messageBox =
+            document.getElementById("messageBox");
+
+        const profilePhoto =
+            document.getElementById("profilePhoto");
+
+        const topUserPhoto =
+            document.getElementById("topUserPhoto");
+
+        const profileName =
+            document.getElementById("profileName");
+
+        const profileEmail =
+            document.getElementById("profileEmail");
+
+        const topUserName =
+            document.getElementById("topUserName");
+
+        const userIdValue =
+            document.getElementById("userIdValue");
+
+        const displayNameInput =
+            document.getElementById("displayName");
+
+        const emailInput =
+            document.getElementById("email");
+
+        const genderInput =
+            document.getElementById("gender");
+
+        const bioInput =
+            document.getElementById("bio");
+
+        const charCount =
+            document.getElementById("charCount");
+
+        const editButton =
+            document.getElementById("editButton");
+
+        const saveButton =
+            document.getElementById("saveButton");
+
+        const cancelButton =
+            document.getElementById("cancelButton");
+
+        const formActions =
+            document.getElementById("formActions");
+
+        const logoutButton =
+            document.getElementById("logoutButton");
+
+
+        let currentUser = null;
+
+
+        let originalData = {
+
+            displayName: "",
+            gender: "",
+            bio: ""
+
+        };
+
+
+        /* =========================
+           MESSAGE
+        ========================== */
+
+        function showMessage(
+            text,
+            type = "success"
+        ) {
+
+            messageBox.textContent =
+                text;
+
+            messageBox.className =
+                "message " + type;
+
+
+            setTimeout(() => {
+
+                messageBox.className =
+                    "message";
+
+            }, 4000);
+
+        }
+
+
+        /* =========================
+           DEFAULT AVATAR
+        ========================== */
+
+        function getPhoto(user) {
+
+            if (
+                user &&
+                user.photoURL
+            ) {
+
+                return user.photoURL;
+
+            }
+
+
+            const name =
+                user?.displayName ||
+                "ConnectNow User";
+
+
+            return (
+                "https://ui-avatars.com/api/?name=" +
+                encodeURIComponent(name) +
+                "&background=ede9fe&color=6d28d9&size=200"
+            );
+
+        }
+
+
+        /* =========================
+           FIRESTORE USER DOCUMENT
+        ========================== */
+
+        function getUserDocument(userId) {
+
+            return doc(
+                db,
+                "users",
+                userId
+            );
+
+        }
+
+
+        /* =========================
+           LOAD PROFILE
+        ========================== */
+
+        async function loadProfile(user) {
+
+            currentUser = user;
+
+
+            const photo =
+                getPhoto(user);
+
+
+            profilePhoto.src =
+                photo;
+
+            topUserPhoto.src =
+                photo;
+
+
+            profileEmail.textContent =
+                user.email ||
+                "No email";
+
+
+            emailInput.value =
+                user.email ||
+                "";
+
+
+            userIdValue.textContent =
+                user.uid ||
+                "";
+
+
+            let profileData = {
+
+                displayName:
+                    user.displayName ||
+                    user.email?.split("@")[0] ||
+                    "ConnectNow User",
+
+                gender: "",
+
+                bio: "",
+
+                photoURL:
+                    user.photoURL || "",
+
+                email:
+                    user.email || ""
+
+            };
+
+
+            try {
+
+                const userRef =
+                    getUserDocument(
+                        user.uid
+                    );
+
+
+                const snapshot =
+                    await getDoc(
+                        userRef
+                    );
+
+
+                if (
+                    snapshot.exists()
+                ) {
+
+                    const firestoreData =
+                        snapshot.data();
+
+
+                    profileData = {
+
+                        ...profileData,
+
+                        ...firestoreData
+
+                    };
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Firestore profile load error:",
+                    error
+                );
+
+
+                showMessage(
+                    "Could not load saved profile. Please check Firestore.",
+                    "error"
+                );
+
+            }
+
+
+            displayNameInput.value =
+                profileData.displayName ||
+                "ConnectNow User";
+
+
+            genderInput.value =
+                profileData.gender ||
+                "";
+
+
+            bioInput.value =
+                profileData.bio ||
+                "";
+
+
+            profileName.textContent =
+                profileData.displayName ||
+                "ConnectNow User";
+
+
+            topUserName.textContent =
+                profileData.displayName ||
+                "User";
+
+
+            if (
+                profileData.photoURL
+            ) {
+
+                profilePhoto.src =
+                    profileData.photoURL;
+
+                topUserPhoto.src =
+                    profileData.photoURL;
+
+            }
+
+
+            originalData = {
+
+                displayName:
+                    profileData.displayName ||
+                    "ConnectNow User",
+
+                gender:
+                    profileData.gender ||
+                    "",
+
+                bio:
+                    profileData.bio ||
+                    ""
+
+            };
+
+
+            updateCharCount();
+
+        }
+
+
+        /* =========================
+           EDIT MODE
+        ========================== */
+
+        function enableEditMode() {
+
+            displayNameInput.disabled =
+                false;
+
+            genderInput.disabled =
+                false;
+
+            bioInput.disabled =
+                false;
+
+
+            formActions.classList.remove(
+                "hidden"
+            );
+
+
+            editButton.classList.add(
+                "hidden"
+            );
+
+
+            displayNameInput.focus();
+
+        }
+
+
+        /* =========================
+           CANCEL
+        ========================== */
+
+        function cancelEdit() {
+
+            displayNameInput.value =
+                originalData.displayName;
+
+            genderInput.value =
+                originalData.gender;
+
+            bioInput.value =
+                originalData.bio;
+
+
+            disableEditMode();
+
+        }
+
+
+        /* =========================
+           DISABLE EDIT
+        ========================== */
+
+        function disableEditMode() {
+
+            displayNameInput.disabled =
+                true;
+
+            genderInput.disabled =
+                true;
+
+            bioInput.disabled =
+                true;
+
+
+            formActions.classList.add(
+                "hidden"
+            );
+
+
+            editButton.classList.remove(
+                "hidden"
+            );
+
+
+            updateCharCount();
+
+        }
+
+
+        /* =========================
+           SAVE PROFILE TO FIRESTORE
+        ========================== */
+
+        async function saveProfile() {
+
+            if (!currentUser) {
+
+                showMessage(
+                    "Please login first.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const name =
+                displayNameInput.value.trim();
+
+
+            const gender =
+                genderInput.value;
+
+
+            const bio =
+                bioInput.value.trim();
+
+
+            /* NAME VALIDATION */
+
+            if (!name) {
+
+                showMessage(
+                    "Please enter your display name.",
+                    "error"
+                );
+
+                displayNameInput.focus();
+
+                return;
+
+            }
+
+
+            if (name.length < 2) {
+
+                showMessage(
+                    "Display name must contain at least 2 characters.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (name.length > 50) {
+
+                showMessage(
+                    "Display name is too long.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (bio.length > 300) {
+
+                showMessage(
+                    "Bio cannot exceed 300 characters.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            /* DISABLE BUTTON */
+
+            saveButton.disabled =
+                true;
+
+            saveButton.textContent =
+                "Saving...";
+
+
+            try {
+
+                const userRef =
+                    getUserDocument(
+                        currentUser.uid
+                    );
+
+
+                const profileData = {
+
+                    userId:
+                        currentUser.uid,
+
+                    displayName:
+                        name,
+
+                    email:
+                        currentUser.email ||
+                        "",
+
+                    gender:
+                        gender,
+
+                    bio:
+                        bio,
+
+                    photoURL:
+                        currentUser.photoURL ||
+                        "",
+
+                    updatedAt:
+                        serverTimestamp()
+
+                };
+
+
+                await setDoc(
+                    userRef,
+                    profileData,
+                    {
+                        merge: true
+                    }
+                );
+
+
+                originalData = {
+
+                    displayName:
+                        name,
+
+                    gender:
+                        gender,
+
+                    bio:
+                        bio
+
+                };
+
+
+                profileName.textContent =
+                    name;
+
+
+                topUserName.textContent =
+                    name;
+
+
+                disableEditMode();
+
+
+                showMessage(
+                    "Profile saved successfully."
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Firestore profile save error:",
+                    error
+                );
+
+
+                showMessage(
+                    "Profile save failed: " +
+                    error.message,
+                    "error"
+                );
+
+            } finally {
+
+                saveButton.disabled =
+                    false;
+
+                saveButton.textContent =
+                    "Save Profile";
+
+            }
+
+        }
+
+
+        /* =========================
+           CHARACTER COUNT
+        ========================== */
+
+        function updateCharCount() {
+
+            const length =
+                bioInput.value.length;
+
+
+            charCount.textContent =
+                length + " / 300";
+
+        }
+
+
+        /* =========================
+           EVENTS
+        ========================== */
+
+        editButton.addEventListener(
+            "click",
+            enableEditMode
+        );
+
+
+        saveButton.addEventListener(
+            "click",
+            saveProfile
+        );
+
+
+        cancelButton.addEventListener(
+            "click",
+            cancelEdit
+        );
+
+
+        bioInput.addEventListener(
+            "input",
+            updateCharCount
+        );
+
+
+        /* =========================
+           LOGOUT
+        ========================== */
+
+        logoutButton.addEventListener(
+            "click",
+            async () => {
+
+                const confirmed =
+                    confirm(
+                        "Are you sure you want to logout?"
+                    );
+
+
+                if (!confirmed) {
+                    return;
+                }
+
+
+                try {
+
+                    await signOut(
+                        auth
+                    );
+
+
+                    window.location.href =
+                        "login.html";
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Logout error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        "Logout failed. Please try again.",
+                        "error"
+                    );
+
+                }
+
+            }
+        );
+
+
+        /* =========================
+           AUTH STATE
+        ========================== */
+
+        onAuthStateChanged(
+            auth,
+            async (user) => {
+
+                if (!user) {
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+
+                }
+
+
+                await loadProfile(
+                    user
+                );
+
+
+                setTimeout(() => {
+
+                    loadingScreen.style.display =
+                        "none";
+
+                }, 300);
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>

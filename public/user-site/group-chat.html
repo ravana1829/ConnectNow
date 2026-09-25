@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>ConnectNow - Group Chat</title>
+
+  <link
+    rel="stylesheet"
+    href="./css/group-chat.css"
+  >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+====================================================== -->
+
+<header class="cn-header">
+
+  <div class="cn-brand-area">
+
+    <div class="cn-logo">
+      CN
+    </div>
+
+    <div class="cn-brand-text">
+      ConnectNow
+    </div>
+
+  </div>
+
+
+  <div class="cn-header-actions">
+
+    <button
+      id="homeBtn"
+      class="header-btn"
+      title="Home"
+    >
+      🏠
+    </button>
+
+
+    <button
+      id="notificationBtn"
+      class="header-btn"
+      title="Notifications"
+    >
+      🔔
+    </button>
+
+
+    <button
+      id="profileHeaderBtn"
+      class="profile-header-btn"
+      title="Account"
+    >
+
+      <img
+        id="headerProfileImage"
+        src="https://ui-avatars.com/api/?name=User"
+        alt="Profile"
+      >
+
+    </button>
+
+  </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     MAIN
+====================================================== -->
+
+<main class="cn-main">
+
+
+  <!-- ===================================================
+       LEFT
+  ==================================================== -->
+
+  <aside class="cn-left">
+
+    <div class="left-top">
+
+      <div class="section-title">
+
+        <h3>
+          Groups
+        </h3>
+
+        <button
+          id="createGroupBtn"
+          class="create-group-btn"
+          title="Create Group"
+        >
+          +
+        </button>
+
+      </div>
+
+
+      <div class="group-search">
+
+        <span class="group-search-icon">
+          🔍
+        </span>
+
+        <input
+          id="groupSearchInput"
+          type="text"
+          placeholder="Search groups..."
+        >
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="groupList"
+      class="group-list"
+    >
+
+      <button
+        class="group-item active"
+        data-group-id="connectnow-community"
+        data-group-name="ConnectNow Community"
+        data-group-description="Public ConnectNow community"
+      >
+
+        <div class="group-avatar">
+          CN
+        </div>
+
+        <div class="group-item-content">
+
+          <div class="group-item-name">
+            ConnectNow Community
+          </div>
+
+          <div class="group-item-sub">
+            Public community
+          </div>
+
+        </div>
+
+      </button>
+
+    </div>
+
+
+    <div class="left-bottom">
+
+      <div
+        id="leftProfileCard"
+        class="profile-card"
+      >
+
+        <img
+          id="leftProfileImage"
+          class="profile-card-avatar"
+          src="https://ui-avatars.com/api/?name=User"
+          alt="Profile"
+        >
+
+
+        <div class="profile-card-info">
+
+          <div
+            id="leftProfileName"
+            class="profile-card-name"
+          >
+            ConnectNow User
+          </div>
+
+          <div class="profile-card-status">
+            ● Online
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <button
+        id="logoutBtn"
+        class="logout-btn"
+      >
+        Logout
+      </button>
+
+    </div>
+
+  </aside>
+
+
+
+  <!-- ===================================================
+       CENTER
+  ==================================================== -->
+
+  <section class="cn-center">
+
+
+    <div class="cn-chat-header">
+
+      <div class="chat-room-left">
+
+        <div
+          id="chatRoomAvatar"
+          class="chat-room-avatar"
+        >
+          CN
+        </div>
+
+
+        <div class="chat-room-details">
+
+          <div
+            id="chatRoomName"
+            class="chat-room-name"
+          >
+            ConnectNow Community
+          </div>
+
+          <div
+            id="chatRoomDescription"
+            class="chat-room-description"
+          >
+            Connecting...
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="chat-room-actions">
+
+        <!-- ADMIN PUBLIC LIVE -->
+        <button
+          id="liveBtn"
+          class="chat-action live"
+          title="Admin Live Stream"
+        >
+          🔴
+        </button>
+
+
+        <!-- MOBILE USERS -->
+        <button
+          id="membersBtn"
+          class="chat-action"
+          title="Users"
+        >
+          👥
+        </button>
+
+
+        <button
+          id="roomInfoBtn"
+          class="chat-action"
+          title="Group Info"
+        >
+          ℹ️
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="connectionStatus"
+      class="connection-status"
+    >
+      Connecting to chat server...
+    </div>
+
+
+    <!-- MESSAGES -->
+
+    <div
+      id="chatMessages"
+      class="cn-messages"
+    >
+
+      <div class="empty-state">
+
+        <div class="empty-state-icon">
+          💬
+        </div>
+
+        <h3>
+          Welcome to ConnectNow
+        </h3>
+
+        <p>
+          Start a conversation with people in this group.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="typingIndicator"
+      class="typing-indicator hidden"
+    >
+      Someone is typing...
+    </div>
+
+
+    <!-- COMPOSER -->
+
+    <div class="cn-composer">
+
+      <div class="composer-box">
+
+        <textarea
+          id="messageInput"
+          placeholder="Type a message..."
+          rows="1"
+        ></textarea>
+
+
+        <button
+          id="emojiBtn"
+          class="composer-icon"
+          title="Emoji"
+        >
+          ☺
+        </button>
+
+
+        <button
+          id="imageBtn"
+          class="composer-icon"
+          title="Image"
+        >
+          🖼
+        </button>
+
+
+        <button
+          id="paintBtn"
+          class="composer-icon"
+          title="Sticker"
+        >
+          🎨
+        </button>
+
+
+        <button
+          id="sendMessageBtn"
+          class="send-btn"
+          title="Send"
+        >
+          ➤
+        </button>
+
+      </div>
+
+
+      <div
+        id="emojiPanel"
+        class="emoji-panel hidden"
+      >
+
+        <div
+          id="emojiGrid"
+          class="emoji-grid"
+        ></div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ===================================================
+       RIGHT USERS
+  ==================================================== -->
+
+  <aside
+    id="membersSidebar"
+    class="cn-right"
+  >
+
+    <div class="cn-right-header">
+
+      <div class="cn-right-title">
+
+        <h3>
+          People
+        </h3>
+
+        <div
+          id="onlineMemberCount"
+          class="cn-right-title-count"
+        >
+          0
+        </div>
+
+      </div>
+
+
+      <div class="right-tabs">
+
+        <button
+          id="usersTab"
+          class="right-tab active"
+        >
+          Users
+        </button>
+
+
+        <button
+          id="friendsTab"
+          class="right-tab"
+        >
+          Friends
+        </button>
+
+      </div>
+
+
+      <div class="right-search">
+
+        <span class="right-search-icon">
+          🔍
+        </span>
+
+        <input
+          id="memberSearchInput"
+          type="text"
+          placeholder="Search people..."
+        >
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="membersList"
+      class="cn-members-list"
+    ></div>
+
+
+    <div class="ignore-count">
+
+      <span id="ignoreCount">
+        0
+      </span>
+
+      ignores
+
+    </div>
+
+  </aside>
+
+</main>
+
+
+
+<!-- =====================================================
+     USER PROFILE POPUP
+====================================================== -->
+
+<div
+  id="userProfilePopup"
+  class="user-popup hidden"
+>
+
+  <div class="user-popup-cover"></div>
+
+
+  <div class="user-popup-body">
+
+    <div class="user-popup-avatar-wrap">
+
+      <img
+        id="popupAvatar"
+        class="user-popup-avatar"
+        src="https://ui-avatars.com/api/?name=User"
+        alt="User"
+      >
+
+    </div>
+
+
+    <div
+      id="popupName"
+      class="user-popup-name"
+    >
+      User
+    </div>
+
+
+    <div
+      id="popupUsername"
+      class="user-popup-username"
+    >
+      @user
+    </div>
+
+
+    <div
+      id="popupBio"
+      class="user-popup-bio"
+    >
+      ConnectNow user
+    </div>
+
+
+    <div class="user-popup-actions">
+
+      <button
+        id="popupAddFriendBtn"
+        class="popup-action primary"
+      >
+        👥 Add Friend
+      </button>
+
+
+      <button
+        id="popupViewProfileBtn"
+        class="popup-action"
+      >
+        👤 Profile
+      </button>
+
+
+      <button
+        id="popupBlockBtn"
+        class="popup-action danger"
+      >
+        🚫 Block
+      </button>
+
+
+      <button
+        id="popupReportBtn"
+        class="popup-action danger"
+      >
+        🚩 Report
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     ACCOUNT MENU
+====================================================== -->
+
+<div
+  id="profileMenu"
+  class="account-menu hidden"
+>
+
+  <button
+    id="menuProfile"
+    class="account-menu-item"
+  >
+    👤 Profile
+  </button>
+
+
+  <button
+    id="menuPreferences"
+    class="account-menu-item"
+  >
+    ☷ Preferences
+  </button>
+
+
+  <button
+    id="menuLightMode"
+    class="account-menu-item"
+  >
+    ☀ Light mode
+  </button>
+
+
+  <button
+    id="menuSounds"
+    class="account-menu-item"
+  >
+    🔔 Sounds on
+  </button>
+
+
+  <button
+    id="menuForum"
+    class="account-menu-item"
+  >
+    💬 Forum
+  </button>
+
+
+  <button
+    id="menuGoogleLogin"
+    class="account-menu-item"
+  >
+    🔐 Google Login
+  </button>
+
+
+  <button
+    id="menuLogout"
+    class="account-menu-item danger"
+  >
+    ▪ Logout
+  </button>
+
+</div>
+
+
+
+<!-- =====================================================
+     CREATE GROUP
+====================================================== -->
+
+<div
+  id="createGroupModal"
+  class="overlay hidden"
+>
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <div class="modal-title">
+        Create Group
+      </div>
+
+
+      <button
+        id="closeCreateGroupBtn"
+        class="modal-close"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <div class="modal-body">
+
+      <div class="form-group">
+
+        <label class="form-label">
+          Group name
+        </label>
+
+        <input
+          id="groupNameInput"
+          class="form-input"
+          type="text"
+          maxlength="60"
+          placeholder="Enter group name"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label class="form-label">
+          Description
+        </label>
+
+        <textarea
+          id="groupDescriptionInput"
+          class="form-textarea"
+          maxlength="200"
+          placeholder="Describe your group"
+        ></textarea>
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <button
+          id="cancelCreateGroupBtn"
+          class="btn btn-secondary"
+        >
+          Cancel
+        </button>
+
+
+        <button
+          id="saveCreateGroupBtn"
+          class="btn btn-primary"
+        >
+          Create Group
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     ROOM INFO
+====================================================== -->
+
+<div
+  id="roomInfoModal"
+  class="overlay hidden"
+>
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <div class="modal-title">
+        Group Info
+      </div>
+
+
+      <button
+        id="closeRoomInfoBtn"
+        class="modal-close"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <div class="modal-body">
+
+      <h3 id="infoRoomName">
+        ConnectNow Community
+      </h3>
+
+
+      <p
+        id="infoRoomDescription"
+        class="room-info-description"
+      >
+        Public ConnectNow community
+      </p>
+
+
+      <div class="room-info-stats">
+
+        <div>
+
+          <strong id="infoMemberCount">
+            0
+          </strong>
+
+          <span>
+            members
+          </span>
+
+        </div>
+
+
+        <div>
+
+          <strong>
+            Public
+          </strong>
+
+          <span>
+            room
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     ADMIN LOGIN
+====================================================== -->
+
+<div
+  id="adminLoginModal"
+  class="overlay hidden"
+>
+
+  <div class="modal admin-login-modal">
+
+    <div class="modal-header">
+
+      <div class="modal-title">
+        🔐 Admin Login
+      </div>
+
+
+      <button
+        id="closeAdminLoginBtn"
+        class="modal-close"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <div class="modal-body">
+
+      <div class="admin-login-note">
+        Only an authorized admin can start the public Live Stream.
+      </div>
+
+
+      <div class="form-group">
+
+        <label class="form-label">
+          Admin Username
+        </label>
+
+        <input
+          id="adminUsernameInput"
+          class="form-input"
+          type="text"
+          autocomplete="username"
+          placeholder="Enter admin username"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label class="form-label">
+          Admin Password
+        </label>
+
+        <input
+          id="adminPasswordInput"
+          class="form-input"
+          type="password"
+          autocomplete="current-password"
+          placeholder="Enter admin password"
+        >
+
+      </div>
+
+
+      <div
+        id="adminLoginError"
+        class="admin-login-error hidden"
+      ></div>
+
+
+      <div class="modal-actions">
+
+        <button
+          id="cancelAdminLoginBtn"
+          class="btn btn-secondary"
+        >
+          Cancel
+        </button>
+
+
+        <button
+          id="adminLoginBtn"
+          class="btn btn-primary"
+        >
+          Login & Continue
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     ADMIN PUBLIC LIVE
+     DO NOT MIX WITH PRIVATE VIDEO
+====================================================== -->
+
+<div
+  id="liveStreamModal"
+  class="overlay hidden"
+>
+
+  <div class="live-modal">
+
+    <div class="live-video-area">
+
+      <video
+        id="localLiveVideo"
+        autoplay
+        muted
+        playsinline
+      ></video>
+
+
+      <div
+        id="liveRemoteVideos"
+        class="live-remote-grid"
+      ></div>
+
+
+      <div class="live-top-bar">
+
+        <div class="live-badge">
+          ● LIVE
+        </div>
+
+
+        <button
+          id="closeLiveBtn"
+          class="live-close"
+        >
+          ✕
+        </button>
+
+      </div>
+
+
+      <div class="live-host-label">
+
+        <span id="liveHostName">
+          You
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="live-bottom-bar">
+
+      <button
+        id="startLiveBtn"
+        class="live-control live-primary"
+      >
+        🔴 Start Live
+      </button>
+
+
+      <button
+        id="stopLiveBtn"
+        class="live-control danger"
+      >
+        ⏹ Stop
+      </button>
+
+
+      <button
+        id="closeLiveOnlyBtn"
+        class="live-control"
+      >
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     PRIVATE VIDEO / PRIVATE LIVE
+====================================================== -->
+
+<div
+  id="privateVideoModal"
+  class="overlay hidden"
+>
+
+  <div class="private-video-modal">
+
+    <div class="private-video-header">
+
+      <div>
+
+        <strong id="privateVideoTitle">
+          Private Video
+        </strong>
+
+        <div
+          id="privateVideoStatus"
+          class="private-video-status"
+        >
+          Connecting...
+        </div>
+
+      </div>
+
+
+      <button
+        id="closePrivateVideoBtn"
+        class="modal-close"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <div class="private-video-area">
+
+      <video
+        id="privateRemoteVideo"
+        class="private-remote-video"
+        autoplay
+        playsinline
+      ></video>
+
+
+      <video
+        id="privateLocalVideo"
+        class="private-local-video"
+        autoplay
+        muted
+        playsinline
+      ></video>
+
+    </div>
+
+
+    <div class="private-video-controls">
+
+      <button
+        id="startPrivateVideoBtn"
+        class="live-control live-primary"
+      >
+        🎥 Start My Video
+      </button>
+
+
+      <button
+        id="stopPrivateVideoBtn"
+        class="live-control danger"
+      >
+        ⏹ Stop Video
+      </button>
+
+
+      <button
+        id="endPrivateVideoBtn"
+        class="live-control"
+      >
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     TOAST
+====================================================== -->
+
+<div
+  id="toast"
+  class="toast"
+></div>
+
+
+
+<script src="http://localhost:5000/socket.io/socket.io.js"></script>
+
+<script
+  type="module"
+  src="./js/group-chat.js"
+></script>
+
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConnectNow - Random Chat</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/chat.css" />
+  <style>
+    .chat-container {
+      display: flex;
+      height: calc(100vh - 80px);
+      max-height: 100vh;
+    }
+
+    .chat-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #f5f8fc;
+    }
+
+    .chat-header {
+      background: white;
+      padding: 20px;
+      border-bottom: 1px solid #e7ebf2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chat-header h2 {
+      font-size: 20px;
+      color: #162033;
+    }
+
+    .free-count {
+      background: linear-gradient(135deg, #7C3AED, #EC4899);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .message {
+      padding: 12px 16px;
+      border-radius: 12px;
+      max-width: 70%;
+      word-wrap: break-word;
+    }
+
+    .message.own {
+      background: linear-gradient(135deg, #7C3AED, #EC4899);
+      color: white;
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .message.other {
+      background: white;
+      color: #162033;
+      margin-right: auto;
+    }
+
+    .chat-input-area {
+      padding: 20px;
+      background: white;
+      border-top: 1px solid #e7ebf2;
+      display: flex;
+      gap: 12px;
+    }
+
+    .chat-input {
+      flex: 1;
+      border: 1px solid #e7ebf2;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .chat-input:focus {
+      border-color: var(--primary);
+    }
+
+    .send-btn {
+      background: linear-gradient(135deg, #7C3AED, #EC4899);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .send-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .chat-actions {
+      display: flex;
+      gap: 12px;
+      padding: 20px;
+      background: white;
+      border-top: 1px solid #e7ebf2;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      flex: 1;
+      min-width: 100px;
+      padding: 12px 16px;
+      border: 1px solid #e7ebf2;
+      border-radius: 12px;
+      background: white;
+      color: #162033;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .action-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .next-btn {
+      background: linear-gradient(135deg, #7C3AED, #EC4899);
+      color: white;
+      border: none;
+    }
+
+    .next-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #5f6b7f;
+    }
+
+    .spinner {
+      border: 4px solid #e7ebf2;
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .usage-warning {
+      background: #fef3c7;
+      border: 1px solid #fcd34d;
+      padding: 16px;
+      border-radius: 12px;
+      margin: 20px;
+      color: #92400e;
+    }
+
+    @media (max-width: 768px) {
+      .chat-container {
+        height: calc(100vh - 60px);
+      }
+
+      .message {
+        max-width: 90%;
+      }
+
+      .chat-actions {
+        gap: 8px;
+      }
+
+      .action-btn {
+        min-width: 80px;
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =====================================================
+       TOP NAVIGATION
+       ===================================================== -->
+
+  <header class="topbar">
+
+    <div class="logo-wrap">
+      <a href="index.html" class="logo">
+        <img src="./assets/logo.png" alt="ConnectNow" class="logo-img" />
+        <span>ConnectNow</span>
+      </a>
+    </div>
+
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="chat.html" class="nav-link active">Random Chat</a>
+      <a href="video-call.html" class="nav-link">Video Call</a>
+      <a href="group-chat.html" class="nav-link">Group Chat</a>
+      <a href="wallet.html" class="nav-link wallet-link"><span>💎</span> Wallet</a>
+
+      <div class="nav-dropdown">
+        <button type="button" class="nav-dropdown-btn" id="rewardsMenuBtn">
+          Rewards <span class="dropdown-arrow">⌄</span>
+        </button>
+        <div class="dropdown-menu" id="rewardsMenu">
+          <a href="daily-reward.html" class="dropdown-item">
+            <span class="dropdown-icon">🎁</span>
+            <span><strong>Daily Reward</strong><small>Claim your daily reward</small></span>
+          </a>
+          <a href="daily-tasks.html" class="dropdown-item">
+            <span class="dropdown-icon">✅</span>
+            <span><strong>Daily Tasks</strong><small>Complete tasks and earn diamonds</small></span>
+          </a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <button type="button" class="nav-profile-btn" id="profileMenuBtn">
+          <div class="nav-user-avatar" id="navUserAvatar">C</div>
+          <span class="nav-user-name" id="navUserName">ConnectNow User</span>
+          <span class="dropdown-arrow">⌄</span>
+        </button>
+
+        <div class="dropdown-menu profile-dropdown" id="profileMenu">
+          <div class="dropdown-profile-header">
+            <div class="dropdown-large-avatar" id="dropdownUserAvatar">C</div>
+            <div>
+              <strong id="dropdownUserName">ConnectNow User</strong>
+              <small id="dropdownUserEmail">user@example.com</small>
+            </div>
+          </div>
+
+          <a href="profile.html" class="dropdown-item">
+            <span class="dropdown-icon">👤</span>
+            <span><strong>My Profile</strong><small>View and edit your profile</small></span>
+          </a>
+
+          <button type="button" class="dropdown-item logout-dropdown-item" id="dropdownLogoutBtn">
+            <span class="dropdown-icon">🚪</span>
+            <span><strong>Logout</strong><small>Sign out from ConnectNow</small></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">☰</button>
+
+  </header>
+
+  <!-- Mobile Navigation -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="index.html" class="mobile-nav-link">🏠 Home</a>
+    <a href="chat.html" class="mobile-nav-link active">💬 Random Chat</a>
+    <a href="video-call.html" class="mobile-nav-link">📹 Video Call</a>
+    <a href="group-chat.html" class="mobile-nav-link">👥 Group Chat</a>
+    <a href="wallet.html" class="mobile-nav-link">💎 Wallet</a>
+    <a href="daily-reward.html" class="mobile-nav-link">🎁 Daily Reward</a>
+    <a href="daily-tasks.html" class="mobile-nav-link">✅ Daily Tasks</a>
+    <a href="profile.html" class="mobile-nav-link">👤 My Profile</a>
+    <button type="button" class="mobile-nav-link mobile-logout" id="mobileLogoutBtn">🚪 Logout</button>
+  </div>
+
+  <!-- =====================================================
+       CHAT PAGE
+       ===================================================== -->
+
+  <div class="chat-container">
+    <div class="chat-main">
+      <div class="chat-header">
+        <h2>💬 Random Chat</h2>
+        <div class="free-count" id="freeChatStatus">Free: <span id="freeCountDisplay">10</span>/10</div>
+      </div>
+
+      <!-- Usage Warning -->
+      <div id="usageWarning" class="usage-warning" style="display: none; margin: 0 20px 20px; margin-top: 20px;">
+        <strong>⚠️ No Free Chats Remaining!</strong>
+        <p>You've used all your free random chat connections. Use diamonds from your wallet to continue, or come back tomorrow for more free uses!</p>
+        <a href="wallet.html" style="color: #b45309; text-decoration: underline; font-weight: 600;">Go to Wallet</a>
+      </div>
+
+      <div id="chatMessages" class="chat-messages">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Connecting to a stranger...</p>
+        </div>
+      </div>
+
+      <div class="chat-input-area">
+        <input type="text" class="chat-input" id="messageInput" placeholder="Type your message..." />
+        <button class="send-btn" id="sendBtn">Send</button>
+      </div>
+
+      <div class="chat-actions">
+        <button class="action-btn" id="stopChatBtn">Stop Chat</button>
+        <button class="action-btn" id="reportBtn">Report</button>
+        <button class="action-btn" id="blockBtn">Block</button>
+        <button class="action-btn next-btn" id="nextBtn">Next Person</button>
+        <a href="index.html" class="action-btn" style="display: flex; align-items: center; justify-content: center; text-decoration: none;">Home</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       JAVASCRIPT
+       ===================================================== -->
+
+  <script type="module" src="./js/chat-page.js"></script>
+
+</body>
+</html>

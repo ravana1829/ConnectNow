@@ -1,0 +1,224 @@
+/* ================================
+   CONNECTNOW - PROFILE
+   ================================ */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #222;
+    min-height: 100vh;
+}
+
+/* PAGE */
+.profile-page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 30px 20px;
+}
+
+/* CONTAINER */
+.profile-container {
+    width: min(650px, 100%);
+    margin: 0 auto;
+}
+
+/* HEADER */
+.profile-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.profile-header h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.profile-header p {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+/* PROFILE CARD */
+.profile-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+/* PHOTO */
+.profile-photo-section {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.profile-photo {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    background: #111827;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    font-weight: bold;
+    background-size: cover;
+    background-position: center;
+}
+
+/* NAME */
+.profile-name {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.profile-email {
+    margin-top: 5px;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+/* FORM */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    padding: 12px 13px;
+    font-size: 14px;
+    outline: none;
+    background: #ffffff;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #111827;
+}
+
+.form-group textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+/* USER ID */
+.user-id-box {
+    background: #f3f4f6;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 12px;
+    color: #6b7280;
+    word-break: break-all;
+}
+
+/* BUTTONS */
+.profile-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.save-profile-btn,
+.logout-btn {
+    flex: 1;
+    border: none;
+    padding: 13px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.save-profile-btn {
+    background: #111827;
+    color: #ffffff;
+}
+
+.logout-btn {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.save-profile-btn:hover,
+.logout-btn:hover {
+    opacity: 0.9;
+}
+
+/* STATUS */
+.status-message {
+    display: none;
+    margin-top: 15px;
+    padding: 11px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 13px;
+}
+
+/* NAVIGATION */
+.profile-nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.profile-nav a {
+    text-decoration: none;
+    color: #374151;
+    background: #ffffff;
+    padding: 9px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.profile-nav a:hover {
+    background: #111827;
+    color: #ffffff;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+
+    .profile-page {
+        padding: 20px 12px;
+    }
+
+    .profile-card {
+        padding: 22px;
+        border-radius: 15px;
+    }
+
+    .profile-header h1 {
+        font-size: 24px;
+    }
+
+    .profile-actions {
+        flex-direction: column;
+    }
+
+    .profile-photo {
+        width: 95px;
+        height: 95px;
+        font-size: 32px;
+    }
+}

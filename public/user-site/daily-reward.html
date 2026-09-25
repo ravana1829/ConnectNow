@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConnectNow - Daily Reward</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <style>
+    .rewards-container {
+      max-width: 600px;
+      margin: 60px auto;
+      padding: 20px;
+    }
+
+    .reward-card {
+      background: linear-gradient(135deg, #7C3AED, #EC4899);
+      color: white;
+      padding: 40px;
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    .reward-card h1 {
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    .reward-amount {
+      font-size: 48px;
+      font-weight: 700;
+      margin: 20px 0;
+    }
+
+    .claim-btn {
+      background: white;
+      color: #7C3AED;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: transform 0.2s;
+    }
+
+    .claim-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .claim-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 20px;
+      color: #7C3AED;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <div class="logo-wrap">
+      <a href="index.html" class="logo">
+        <img src="./assets/logo.png" alt="ConnectNow" class="logo-img" />
+        <span>ConnectNow</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="rewards-container">
+    <div class="reward-card">
+      <h1>🎁 Daily Reward</h1>
+      <p>Claim your daily bonus diamonds!</p>
+      <div class="reward-amount">
+        <span>💎</span> 50
+      </div>
+      <p>diamonds awaiting you</p>
+      <button class="claim-btn" id="claimBtn">Claim Reward</button>
+      <p id="claimMessage" style="margin-top: 20px;"></p>
+    </div>
+    <a href="index.html" class="back-btn">← Back to Home</a>
+  </div>
+
+  <script type="module">
+    import { protectPage, onAuthReady, addDiamonds } from "./js/auth-helper.js";
+
+    const claimBtn = document.getElementById("claimBtn");
+    const claimMessage = document.getElementById("claimMessage");
+    let lastClaimDate = localStorage.getItem("lastDailyRewardDate");
+    const today = new Date().toDateString();
+
+    protectPage().then(() => {
+      onAuthReady((user, profile) => {
+        if (lastClaimDate === today) {
+          claimBtn.disabled = true;
+          claimMessage.textContent = "✅ Already claimed today. Come back tomorrow!";
+          claimMessage.style.color = "#20a76a";
+        }
+      });
+    });
+
+    claimBtn?.addEventListener("click", async () => {
+      const success = await addDiamonds(50);
+      if (success) {
+        localStorage.setItem("lastDailyRewardDate", today);
+        claimBtn.disabled = true;
+        claimMessage.textContent = "✅ Reward claimed! 50 diamonds added!";
+        claimMessage.style.color = "#20a76a";
+      }
+    });
+  </script>
+
+</body>
+</html>

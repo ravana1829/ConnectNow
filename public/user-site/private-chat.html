@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Private Chat - ConnectNow</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/private-chat.css" />
+  <script type="module" src="./js/private-chat.js"></script>
+</head>
+<body>
+  <!-- Navigation -->
+  <header class="topbar">
+    <div class="logo-wrap">
+      <a href="index.html" class="logo">
+        <img src="./assets/logo.png" alt="ConnectNow" class="logo-img" />
+        <span>ConnectNow</span>
+      </a>
+    </div>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="chat.html" class="nav-link">Random Chat</a>
+      <a href="video-call.html" class="nav-link">Video Call</a>
+      <a href="group-chat.html" class="nav-link">Group Chat</a>
+      <a href="friends.html" class="nav-link">Friends</a>
+      <a href="wallet.html" class="nav-link wallet-link"><span>💎</span>Wallet</a>
+      <button id="logoutBtn" class="nav-link logout-btn">Logout</button>
+    </nav>
+  </header>
+
+  <main class="private-chat-container">
+    <!-- Conversation List -->
+    <aside class="chat-sidebar">
+      <div class="sidebar-header">
+        <h3>Messages</h3>
+        <button id="newChatBtn" class="btn btn-sm btn-primary">+ New</button>
+      </div>
+      <div id="conversationList" class="conversation-list">
+        <!-- Dynamically populated -->
+      </div>
+    </aside>
+
+    <!-- Chat View -->
+    <div class="chat-main">
+      <div id="chatHeader" class="chat-header">
+        <div class="chat-header-info">
+          <img id="chatUserAvatar" class="chat-user-avatar" src="" alt="" />
+          <div>
+            <h3 id="chatUserName">Select a conversation</h3>
+            <span id="chatUserStatus" class="user-status">offline</span>
+          </div>
+        </div>
+        <div class="chat-header-actions">
+          <button id="videoChatBtn" class="btn btn-icon" title="Video Call">📹</button>
+          <button id="clearChatBtn" class="btn btn-icon" title="Clear Chat">🗑️</button>
+        </div>
+      </div>
+
+      <div id="chatMessages" class="chat-messages">
+        <!-- Messages loaded here -->
+      </div>
+
+      <div class="chat-input-area">
+        <input 
+          type="text" 
+          id="messageInput" 
+          class="message-input" 
+          placeholder="Type a message..."
+          disabled
+        />
+        <button id="sendBtn" class="btn btn-primary" disabled>Send</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal for New Chat -->
+  <div id="newChatModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Start New Chat</h3>
+        <button class="modal-close" data-modal="newChatModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input 
+          type="text" 
+          id="searchFriendInput" 
+          class="input-field" 
+          placeholder="Search friends..."
+        />
+        <div id="friendsList" class="friends-list">
+          <!-- Friends loaded here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Online Status Indicator -->
+  <div id="statusIndicator" class="status-indicator"></div>
+</body>
+</html>

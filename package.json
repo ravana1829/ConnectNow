@@ -1,0 +1,20 @@
+{
+  "name": "connectnow",
+  "version": "1.0.0",
+  "description": "ConnectNow - Connect with people through random chat, video calls, and group conversations",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cd public/user-site && python3 -m http.server 8000",
+    "start": "cd public/user-site && python3 -m http.server 8000",
+    "serve": "cd public/user-site && http-server -c-1 -p 8000"
+  },
+  "keywords": [
+    "chat",
+    "video-call",
+    "social",
+    "anonymous",
+    "connect"
+  ],
+  "author": "ConnectNow",
+  "license": "MIT"
+}

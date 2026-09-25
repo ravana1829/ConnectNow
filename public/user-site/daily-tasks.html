@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConnectNow - Daily Tasks</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <style>
+    .tasks-container {
+      max-width: 800px;
+      margin: 60px auto;
+      padding: 20px;
+    }
+
+    .tasks-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .tasks-header h1 {
+      font-size: 32px;
+      color: #162033;
+      margin-bottom: 10px;
+    }
+
+    .task-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .task-card {
+      background: white;
+      border: 2px solid #e7ebf2;
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s;
+    }
+
+    .task-card:hover {
+      border-color: #7C3AED;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1);
+    }
+
+    .task-card.completed {
+      background: #f0fdf4;
+      border-color: #20a76a;
+    }
+
+    .task-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .task-title {
+      font-weight: 600;
+      color: #162033;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+
+    .task-description {
+      font-size: 13px;
+      color: #5f6b7f;
+      margin-bottom: 16px;
+    }
+
+    .task-reward {
+      font-size: 18px;
+      font-weight: 700;
+      color: #EC4899;
+      margin-bottom: 12px;
+    }
+
+    .task-btn {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #7C3AED, #EC4899);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .task-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+    }
+
+    .task-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .back-btn {
+      display: inline-block;
+      color: #7C3AED;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <div class="logo-wrap">
+      <a href="index.html" class="logo">
+        <img src="./assets/logo.png" alt="ConnectNow" class="logo-img" />
+        <span>ConnectNow</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="tasks-container">
+    <div class="tasks-header">
+      <h1>✅ Daily Tasks</h1>
+      <p>Complete tasks to earn diamonds</p>
+    </div>
+
+    <div class="task-grid">
+      <div class="task-card">
+        <div class="task-icon">💬</div>
+        <div class="task-title">Random Chat</div>
+        <div class="task-description">Have a conversation with a stranger</div>
+        <div class="task-reward">💎 10 diamonds</div>
+        <button class="task-btn" onclick="goTo('chat.html')">Start Chat</button>
+      </div>
+
+      <div class="task-card">
+        <div class="task-icon">📹</div>
+        <div class="task-title">Video Call</div>
+        <div class="task-description">Make a video call connection</div>
+        <div class="task-reward">💎 15 diamonds</div>
+        <button class="task-btn" onclick="goTo('video-call.html')">Start Call</button>
+      </div>
+
+      <div class="task-card">
+        <div class="task-icon">👥</div>
+        <div class="task-title">Join Group Chat</div>
+        <div class="task-description">Participate in a group conversation</div>
+        <div class="task-reward">💎 5 diamonds</div>
+        <button class="task-btn" onclick="goTo('group-chat.html')">Join Groups</button>
+      </div>
+
+      <div class="task-card">
+        <div class="task-icon">👤</div>
+        <div class="task-title">Complete Profile</div>
+        <div class="task-description">Add a profile photo and bio</div>
+        <div class="task-reward">💎 25 diamonds</div>
+        <button class="task-btn" onclick="goTo('profile.html')">Edit Profile</button>
+      </div>
+
+      <div class="task-card">
+        <div class="task-icon">🤝</div>
+        <div class="task-title">Make a Friend</div>
+        <div class="task-description">Add someone to your friends list</div>
+        <div class="task-reward">💎 20 diamonds</div>
+        <button class="task-btn" disabled>Invite Friend</button>
+      </div>
+
+      <div class="task-card">
+        <div class="task-icon">⭐</div>
+        <div class="task-title">Get a Positive Review</div>
+        <div class="task-description">Receive positive feedback from users</div>
+        <div class="task-reward">💎 30 diamonds</div>
+        <button class="task-btn" disabled>Pending</button>
+      </div>
+    </div>
+
+    <a href="index.html" class="back-btn">← Back to Home</a>
+  </div>
+
+  <script>
+    function goTo(page) {
+      window.location.href = page;
+    }
+  </script>
+
+</body>
+</html>

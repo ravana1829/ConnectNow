@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Private Video Call - ConnectNow</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/private-video.css" />
+  <script type="module" src="./js/private-video.js"></script>
+</head>
+<body>
+  <!-- Navigation -->
+  <header class="topbar video-header">
+    <div class="logo-wrap">
+      <a href="index.html" class="logo">
+        <img src="./assets/logo.png" alt="ConnectNow" class="logo-img" />
+        <span>ConnectNow</span>
+      </a>
+    </div>
+    <div class="call-info">
+      <h3 id="recipientName">Connecting...</h3>
+      <span id="callTimer" class="call-timer">00:00</span>
+    </div>
+  </header>
+
+  <main class="video-call-container">
+    <!-- Local Video -->
+    <div class="video-section local-section">
+      <video id="localVideo" class="video-player" autoplay muted playsinline></video>
+      <div class="video-label">You</div>
+    </div>
+
+    <!-- Remote Video -->
+    <div class="video-section remote-section">
+      <video id="remoteVideo" class="video-player" autoplay playsinline></video>
+      <div class="video-label" id="remoteLabel">Connecting...</div>
+      <div id="connectionStatus" class="connection-status">Connecting to peer...</div>
+    </div>
+
+    <!-- Call Controls -->
+    <div class="call-controls">
+      <button id="toggleMicBtn" class="control-btn mic-on" title="Mute">
+        <span class="icon">🎤</span>
+        <span class="label">Mic</span>
+      </button>
+      <button id="toggleCameraBtn" class="control-btn camera-on" title="Turn Off Camera">
+        <span class="icon">📷</span>
+        <span class="label">Camera</span>
+      </button>
+      <button id="shareScreenBtn" class="control-btn" title="Share Screen">
+        <span class="icon">🖥️</span>
+        <span class="label">Share</span>
+      </button>
+      <button id="endCallBtn" class="control-btn end-call" title="End Call">
+        <span class="icon">📵</span>
+        <span class="label">End</span>
+      </button>
+    </div>
+
+    <!-- Connection Info -->
+    <div class="connection-info">
+      <div class="info-item">
+        <span class="info-label">Connection:</span>
+        <span id="connectionType" class="info-value">peer-to-peer</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Resolution:</span>
+        <span id="resolution" class="info-value">--</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Bitrate:</span>
+        <span id="bitrate" class="info-value">--</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- Call Waiting Modal -->
+  <div id="waitingModal" class="modal">
+    <div class="modal-content waiting-content">
+      <div class="spinner"></div>
+      <h3>Calling <span id="waitingUserName">user</span>...</h3>
+      <p>Waiting for response...</p>
+      <button id="cancelCallBtn" class="btn btn-danger">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Call Notification Modal -->
+  <div id="notificationModal" class="modal hidden">
+    <div class="modal-content notification-content">
+      <div class="notification-avatar">
+        <img id="callerAvatar" src="" alt="" />
+      </div>
+      <h3><span id="callerName">User</span> is calling...</h3>
+      <div class="notification-actions">
+        <button id="acceptCallBtn" class="btn btn-success">Accept</button>
+        <button id="rejectCallBtn" class="btn btn-danger">Reject</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

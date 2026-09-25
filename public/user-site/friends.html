@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Friends - ConnectNow</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/friends.css" />
+  <script type="module" src="./js/friends.js"></script>
+</head>
+<body>
+  <!-- Navigation -->
+  <header class="topbar">
+    <div class="logo-wrap">
+      <a href="index.html" class="logo">
+        <img src="./assets/logo.png" alt="ConnectNow" class="logo-img" />
+        <span>ConnectNow</span>
+      </a>
+    </div>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="chat.html" class="nav-link">Random Chat</a>
+      <a href="video-call.html" class="nav-link">Video Call</a>
+      <a href="group-chat.html" class="nav-link">Group Chat</a>
+      <a href="private-chat.html" class="nav-link">Messages</a>
+      <a href="friends.html" class="nav-link active">Friends</a>
+      <a href="wallet.html" class="nav-link wallet-link"><span>💎</span>Wallet</a>
+      <button id="logoutBtn" class="nav-link logout-btn">Logout</button>
+    </nav>
+  </header>
+
+  <main class="friends-container">
+    <!-- Tabs -->
+    <div class="tabs-container">
+      <button class="tab-btn active" data-tab="requests">
+        Friend Requests
+        <span id="requestsCount" class="count-badge">0</span>
+      </button>
+      <button class="tab-btn" data-tab="friends">
+        My Friends
+        <span id="friendsCount" class="count-badge">0</span>
+      </button>
+      <button class="tab-btn" data-tab="search">
+        Find Friends
+      </button>
+    </div>
+
+    <!-- Friend Requests Tab -->
+    <div id="requestsTab" class="tab-content active">
+      <h2>Friend Requests</h2>
+      <div id="requestsList" class="requests-list">
+        <div class="empty-state">
+          <span class="empty-icon">📭</span>
+          <p>No pending friend requests</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Friends Tab -->
+    <div id="friendsTab" class="tab-content">
+      <h2>My Friends</h2>
+      <div id="friendsList" class="friends-grid">
+        <div class="empty-state">
+          <span class="empty-icon">👥</span>
+          <p>You don't have any friends yet</p>
+          <p class="empty-subtext">Add friends to start chatting!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Tab -->
+    <div id="searchTab" class="tab-content">
+      <h2>Find Friends</h2>
+      <div class="search-container">
+        <input 
+          type="text" 
+          id="searchInput" 
+          class="search-input" 
+          placeholder="Search by username or name..."
+        />
+        <button id="searchBtn" class="btn btn-primary">Search</button>
+      </div>
+      <div id="searchResults" class="search-results">
+        <div class="search-placeholder">
+          <span class="search-icon">🔍</span>
+          <p>Search for users to add as friends</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- User Profile Modal -->
+  <div id="profileModal" class="modal hidden">
+    <div class="modal-content profile-modal">
+      <button class="modal-close" data-modal="profileModal">&times;</button>
+      <img id="profileAvatar" class="profile-avatar" src="" alt="" />
+      <h3 id="profileName">User Name</h3>
+      <p id="profileStatus" class="profile-status">offline</p>
+      <div class="profile-actions">
+        <button id="chatBtn" class="btn btn-primary">💬 Chat</button>
+        <button id="callBtn" class="btn btn-secondary">📞 Call</button>
+        <button id="removeFriendBtn" class="btn btn-danger hidden">Remove Friend</button>
+        <button id="viewProfileBtn" class="btn btn-secondary">👁️ View Profile</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

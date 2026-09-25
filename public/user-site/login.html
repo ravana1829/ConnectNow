@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>ConnectNow - Login</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+
+  <style>
+    .guest-form {
+      display: none;
+      margin-top: 18px;
+      text-align: left;
+    }
+
+    .guest-form.show {
+      display: block;
+    }
+
+    .guest-field {
+      margin-bottom: 14px;
+    }
+
+    .guest-field label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #222;
+    }
+
+    .guest-field input,
+    .guest-field select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 14px;
+      border: 1px solid #d8d8d8;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      background: #fff;
+    }
+
+    .guest-field input:focus,
+    .guest-field select:focus {
+      border-color: #7c3aed;
+    }
+
+    .guest-submit {
+      width: 100%;
+      border: 0;
+      border-radius: 10px;
+      padding: 13px 16px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+
+    .guest-cancel {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      padding: 10px;
+      margin-top: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .guest-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+      margin: 12px 0 16px;
+    }
+
+    .guest-check input {
+      margin-top: 3px;
+    }
+
+    .login-message.error {
+      color: #c62828;
+    }
+
+    .login-message.success {
+      color: #2e7d32;
+    }
+
+    .login-message.info {
+      color: #555;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="auth-container">
+
+    <section class="auth-card">
+
+      <div class="auth-brand">
+
+        <img
+          src="assets/logo.png"
+          alt="ConnectNow Logo"
+          class="connectnow-logo"
+        />
+
+        <h1>ConnectNow</h1>
+
+      </div>
+
+      <h2>Welcome Back</h2>
+
+      <p class="auth-subtitle">
+        Connect with people through chat, video calls and social rooms.
+      </p>
+
+      <!-- GOOGLE LOGIN -->
+      <button
+        id="googleLoginBtn"
+        class="login-btn google-btn"
+        type="button"
+      >
+        <span class="login-icon google-icon">G</span>
+        <span>Continue with Google</span>
+      </button>
+
+      <div class="login-divider">
+        <span>OR</span>
+      </div>
+
+      <!-- GUEST LOGIN BUTTON -->
+      <button
+        id="guestLoginBtn"
+        class="login-btn guest-btn"
+        type="button"
+      >
+        <span class="login-icon">👤</span>
+        <span>Continue as Guest</span>
+      </button>
+
+      <!-- GUEST FORM -->
+      <form id="guestForm" class="guest-form">
+
+        <div class="guest-field">
+          <label for="displayName">
+            Unique Display Name
+          </label>
+
+          <input
+            id="displayName"
+            type="text"
+            maxlength="30"
+            autocomplete="nickname"
+            placeholder="Enter your unique name"
+            required
+          />
+        </div>
+
+        <div class="guest-field">
+          <label for="age">
+            Age
+          </label>
+
+          <input
+            id="age"
+            type="number"
+            min="18"
+            max="120"
+            placeholder="18+"
+            required
+          />
+        </div>
+
+        <div class="guest-field">
+          <label for="gender">
+            Gender
+          </label>
+
+          <select
+            id="gender"
+            required
+          >
+            <option value="">
+              Select gender
+            </option>
+
+            <option value="Male">
+              Male
+            </option>
+
+            <option value="Female">
+              Female
+            </option>
+
+            <option value="Other">
+              Other
+            </option>
+
+            <option value="Prefer not to say">
+              Prefer not to say
+            </option>
+          </select>
+        </div>
+
+        <label class="guest-check">
+          <input
+            id="ageConfirmation"
+            type="checkbox"
+            required
+          />
+
+          <span>
+            I confirm that I am 18 years old or above.
+          </span>
+        </label>
+
+        <label class="guest-check">
+          <input
+            id="termsConfirmation"
+            type="checkbox"
+            required
+          />
+
+          <span>
+            I agree to the ConnectNow Terms and Community Guidelines.
+          </span>
+        </label>
+
+        <button
+          id="guestSubmitBtn"
+          class="login-btn guest-submit"
+          type="submit"
+        >
+          Continue as Guest
+        </button>
+
+        <button
+          id="guestCancelBtn"
+          class="guest-cancel"
+          type="button"
+        >
+          Cancel
+        </button>
+
+      </form>
+
+      <!-- STATUS -->
+      <p
+        id="loginMessage"
+        class="login-message"
+        role="status"
+        aria-live="polite"
+      ></p>
+
+      <div class="login-note">
+        <span>🔒</span>
+
+        <p>
+          ConnectNow is for users aged 18 and above.
+          Please use the platform responsibly.
+        </p>
+      </div>
+
+      <div class="auth-links">
+
+        <a href="community-guidelines.html">
+          Community Guidelines
+        </a>
+
+        <span>•</span>
+
+        <a href="privacy.html">
+          Privacy
+        </a>
+
+        <span>•</span>
+
+        <a href="terms.html">
+          Terms
+        </a>
+
+      </div>
+
+    </section>
+
+  </main><script type="module"></script>
+
+
+  <script type="module">
+
+    import {
+      signInAnonymously,
+      GoogleAuthProvider,
+      signInWithPopup,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+    import {
+      doc,
+      getDoc,
+      runTransaction,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+    import {
+      auth,
+      db
+    } from "./js/firebase-config.js";
+
+    let currentAuthUser = null;
+
+    let authReadyResolve;
+
+    const authReady =
+      new Promise((resolve) => {
+        authReadyResolve = resolve;
+      });
+    const googleLoginBtn =
+      document.getElementById("googleLoginBtn");
+
+    const guestLoginBtn =
+      document.getElementById("guestLoginBtn");
+
+    const guestForm =
+      document.getElementById("guestForm");
+
+    const guestCancelBtn =
+      document.getElementById("guestCancelBtn");
+
+    const guestSubmitBtn =
+      document.getElementById("guestSubmitBtn");
+
+    const loginMessage =
+      document.getElementById("loginMessage");
+
+    const displayNameInput =
+      document.getElementById("displayName");
+
+    const ageInput =
+      document.getElementById("age");
+
+    const genderInput =
+      document.getElementById("gender");
+
+    const ageConfirmation =
+      document.getElementById("ageConfirmation");
+
+    const termsConfirmation =
+      document.getElementById("termsConfirmation");
+
+
+    /* =====================================================
+       HELPERS
+    ===================================================== */
+
+    function showMessage(message, type = "info") {
+
+      loginMessage.textContent = message;
+
+      loginMessage.className =
+        `login-message ${type}`;
+    }
+
+
+    function setButtonsDisabled(disabled) {
+
+      googleLoginBtn.disabled =
+        disabled;
+
+      guestLoginBtn.disabled =
+        disabled;
+
+      guestSubmitBtn.disabled =
+        disabled;
+
+      guestCancelBtn.disabled =
+        disabled;
+    }
+
+
+    function cleanName(name) {
+
+      return String(name || "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+
+    /*
+      Google:
+      Ravanan1829 -> Ravanan
+      Ravanan1234 -> Ravanan
+    */
+    function cleanGoogleName(name) {
+
+      let cleaned =
+        cleanName(name);
+
+      cleaned =
+        cleaned.replace(/\d+$/g, "")
+               .trim();
+
+      return cleaned || "ConnectNow User";
+    }
+
+
+    function normalizeName(name) {
+
+      return cleanName(name)
+        .toLocaleLowerCase("en-US");
+    }
+
+
+    function usernameDocId(name) {
+
+      return encodeURIComponent(
+        normalizeName(name)
+      );
+    }
+
+
+    function isValidDisplayName(name) {
+
+      if (!name) {
+        return false;
+      }
+
+      if (name.length < 3) {
+        return false;
+      }
+
+      if (name.length > 30) {
+        return false;
+      }
+
+      return /^[a-zA-Z0-9 _.-]+$/.test(name);
+    }
+
+
+    function firebaseErrorMessage(error) {
+
+      const code =
+        error?.code || "";
+
+      if (
+        code ===
+        "auth/popup-closed-by-user"
+      ) {
+        return "Google login window was closed.";
+      }
+
+      if (
+        code ===
+        "auth/popup-blocked"
+      ) {
+        return "Your browser blocked the Google login popup.";
+      }
+
+      if (
+        code ===
+        "auth/network-request-failed"
+      ) {
+        return "Network error. Please check your internet connection.";
+      }
+
+      if (
+        code ===
+        "auth/operation-not-allowed"
+      ) {
+        return "Google or Guest login is not enabled in Firebase.";
+      }
+
+      if (
+        code ===
+        "permission-denied"
+      ) {
+        return "Profile save permission failed. Firestore rules need to be deployed.";
+      }
+
+      return (
+        error?.message ||
+        "Login failed. Please try again."
+      );
+    }
+
+
+    function goHome() {
+
+      window.location.replace(
+        "index.html"
+      );
+    }
+
+
+    /* =====================================================
+       GUEST FORM
+    ===================================================== */
+
+    function openGuestForm() {
+
+      guestForm.classList.add("show");
+
+      guestLoginBtn.style.display =
+        "none";
+
+      displayNameInput.focus();
+
+
+      const saved =
+        localStorage.getItem(
+          "connectnow_guest_profile"
+        );
+
+      if (saved) {
+
+        try {
+
+          const data =
+            JSON.parse(saved);
+
+          displayNameInput.value =
+            data.displayName || "";
+
+          ageInput.value =
+            data.age || "";
+
+          genderInput.value =
+            data.gender || "";
+
+        } catch (error) {
+
+          console.warn(
+            "Saved guest profile read error:",
+            error
+          );
+
+        }
+
+      }
+    }
+
+
+    function closeGuestForm() {
+
+      guestForm.classList.remove(
+        "show"
+      );
+
+      guestLoginBtn.style.display =
+        "";
+
+      showMessage(
+        "",
+        "info"
+      );
+    }
+
+
+    guestLoginBtn.addEventListener(
+      "click",
+      async () => {
+
+        try {
+
+          showMessage(
+            "Checking your guest account...",
+            "info"
+          );
+
+          setButtonsDisabled(true);
+
+
+          /*
+            IMPORTANT:
+            Wait for Firebase to restore
+            the old local guest session.
+          */
+
+          const restoredUser =
+            await authReady;
+
+
+          /*
+            SAME GUEST USER
+          */
+
+          if (
+            restoredUser &&
+            restoredUser.isAnonymous
+          ) {
+
+            const userRef =
+              doc(
+                db,
+                "users",
+                restoredUser.uid
+              );
+
+
+            const profileSnap =
+              await getDoc(
+                userRef
+              );
+
+
+            if (
+              profileSnap.exists()
+            ) {
+
+              const profile =
+                profileSnap.data();
+
+
+              if (
+                profile.displayName
+              ) {
+
+                localStorage.setItem(
+                  "connectnow_guest_profile",
+                  JSON.stringify({
+                    displayName:
+                      profile.displayName,
+
+                    age:
+                      profile.age || "",
+
+                    gender:
+                      profile.gender || ""
+                  })
+                );
+
+
+                showMessage(
+                  `Welcome back, ${profile.displayName}. Opening ConnectNow...`,
+                  "success"
+                );
+
+
+                setTimeout(
+                  () => {
+                    goHome();
+                  },
+                  300
+                );
+
+
+                return;
+
+              }
+
+            }
+
+          }
+
+
+          /*
+            NO OLD GUEST SESSION
+            First-time guest only.
+          */
+
+          setButtonsDisabled(
+            false
+          );
+
+          openGuestForm();
+
+        } catch (error) {
+
+          console.error(
+            "Guest login check error:",
+            error
+          );
+
+
+          showMessage(
+            firebaseErrorMessage(error),
+            "error"
+          );
+
+
+          setButtonsDisabled(
+            false
+          );
+
+        }
+
+      }
+    );
+
+
+    guestCancelBtn.addEventListener(
+      "click",
+      closeGuestForm
+    );
+
+
+    /* =====================================================
+       CREATE / UPDATE USER PROFILE
+    ===================================================== */
+
+    async function saveGuestProfile(
+      user,
+      displayName,
+      age,
+      gender
+    ) {
+
+      const userRef =
+        doc(db, "users", user.uid);
+
+      const usernameRef =
+        doc(
+          db,
+          "usernames",
+          usernameDocId(displayName)
+        );
+
+
+      await runTransaction(
+        db,
+        async (transaction) => {
+
+          const existingUsername =
+            await transaction.get(
+              usernameRef
+            );
+
+
+          if (
+            existingUsername.exists()
+          ) {
+
+            const existing =
+              existingUsername.data();
+
+            if (
+              existing.uid !== user.uid
+            ) {
+
+              const error =
+                new Error(
+                  "This display name is already taken."
+                );
+
+              error.code =
+                "display-name-taken";
+
+              throw error;
+            }
+          }
+
+
+          const existingUser =
+            await transaction.get(
+              userRef
+            );
+
+
+          if (
+            existingUsername.exists()
+          ) {
+
+            transaction.update(
+              usernameRef,
+              {
+                uid: user.uid,
+                displayName,
+                updatedAt:
+                  serverTimestamp()
+              }
+            );
+
+          } else {
+
+            transaction.set(
+              usernameRef,
+              {
+                uid: user.uid,
+                displayName,
+                createdAt:
+                  serverTimestamp()
+              }
+            );
+          }
+
+
+          if (
+            existingUser.exists()
+          ) {
+
+            transaction.update(
+              userRef,
+              {
+                displayName,
+                age,
+                gender,
+                loginType:
+                  "guest",
+                status:
+                  "online",
+                lastActiveAt:
+                  serverTimestamp()
+              }
+            );
+
+          } else {
+
+            transaction.set(
+              userRef,
+              {
+                userId:
+                  user.uid,
+
+                loginType:
+                  "guest",
+
+                email:
+                  "",
+
+                displayName,
+
+                age,
+
+                gender,
+
+                photoURL:
+                  "",
+
+                status:
+                  "online",
+
+                createdAt:
+                  serverTimestamp(),
+
+                lastActiveAt:
+                  serverTimestamp()
+              }
+            );
+          }
+
+        }
+      );
+
+
+      localStorage.setItem(
+        "connectnow_guest_profile",
+        JSON.stringify({
+          displayName,
+          age,
+          gender
+        })
+      );
+    }
+
+
+    /* =====================================================
+       FIND AVAILABLE GOOGLE NAME
+    ===================================================== */
+
+    async function getAvailableGoogleName(
+      baseName,
+      uid
+    ) {
+
+      const base =
+        cleanGoogleName(baseName);
+
+
+      let selected =
+        base;
+
+
+      await runTransaction(
+        db,
+        async (transaction) => {
+
+          const candidates = [];
+
+
+          candidates.push(
+            base
+          );
+
+
+          for (
+            let i = 2;
+            i <= 100;
+            i++
+          ) {
+
+            candidates.push(
+              `${base}${i}`
+            );
+          }
+
+
+          let chosen =
+            null;
+
+
+          for (
+            const candidate of candidates
+          ) {
+
+            const ref =
+              doc(
+                db,
+                "usernames",
+                usernameDocId(candidate)
+              );
+
+
+            const snap =
+              await transaction.get(
+                ref
+              );
+
+
+            if (!snap.exists()) {
+
+              chosen = {
+                name:
+                  candidate,
+                ref
+              };
+
+              break;
+
+            }
+
+
+            const data =
+              snap.data();
+
+
+            if (
+              data.uid === uid
+            ) {
+
+              chosen = {
+                name:
+                  data.displayName ||
+                  candidate,
+                ref
+              };
+
+              break;
+
+            }
+
+          }
+
+
+          if (!chosen) {
+
+            const error =
+              new Error(
+                "Could not create a unique display name."
+              );
+
+            error.code =
+              "google-name-unavailable";
+
+            throw error;
+          }
+
+
+          selected =
+            chosen.name;
+
+        }
+      );
+
+
+      return selected;
+    }
+
+
+    /* =====================================================
+       GOOGLE LOGIN + SIGNUP
+    ===================================================== */
+
+    googleLoginBtn.addEventListener(
+      "click",
+      async () => {
+
+        setButtonsDisabled(true);
+
+        showMessage(
+          "Connecting to Google...",
+          "info"
+        );
+
+
+        try {
+
+          /*
+            IMPORTANT:
+            There is NO "already connected"
+            duplicate-account block here.
+
+            Same Google account = same Firebase
+            account = Login.
+          */
+
+          const provider =
+            new GoogleAuthProvider();
+
+
+          provider.setCustomParameters({
+            prompt:
+              "select_account"
+          });
+
+
+          const result =
+            await signInWithPopup(
+              auth,
+              provider
+            );
+
+
+          const user =
+            result.user;
+
+
+          const userRef =
+            doc(
+              db,
+              "users",
+              user.uid
+            );
+
+
+          const userSnap =
+            await getDoc(
+              userRef
+            );
+
+
+          if (
+            userSnap.exists()
+          ) {
+
+            await runTransaction(
+              db,
+              async (transaction) => {
+
+                transaction.update(
+                  userRef,
+                  {
+                    status:
+                      "online",
+
+                    lastActiveAt:
+                      serverTimestamp()
+                  }
+                );
+
+              }
+            );
+
+
+            showMessage(
+              "Login successful. Opening ConnectNow...",
+              "success"
+            );
+
+
+            setTimeout(
+              goHome,
+              300
+            );
+
+            return;
+          }
+
+
+          /*
+            FIRST GOOGLE LOGIN:
+            create ConnectNow profile.
+          */
+
+          const googleName =
+            cleanGoogleName(
+              user.displayName
+            );
+
+
+          const finalName =
+            await getAvailableGoogleName(
+              googleName,
+              user.uid
+            );
+
+
+          await runTransaction(
+            db,
+            async (transaction) => {
+
+              const usernameRef =
+                doc(
+                  db,
+                  "usernames",
+                  usernameDocId(
+                    finalName
+                  )
+                );
+
+
+              const currentName =
+                await transaction.get(
+                  usernameRef
+                );
+
+
+              if (
+                currentName.exists() &&
+                currentName.data().uid !==
+                  user.uid
+              ) {
+
+                const error =
+                  new Error(
+                    "Display name was taken. Please login again."
+                  );
+
+                error.code =
+                  "display-name-taken";
+
+                throw error;
+              }
+
+
+              transaction.set(
+                usernameRef,
+                {
+                  uid:
+                    user.uid,
+
+                  displayName:
+                    finalName,
+
+                  createdAt:
+                    serverTimestamp()
+                },
+                {
+                  merge: true
+                }
+              );
+
+
+              transaction.set(
+                userRef,
+                {
+                  userId:
+                    user.uid,
+
+                  loginType:
+                    "google",
+
+                  email:
+                    user.email || "",
+
+                  displayName:
+                    finalName,
+
+                  age:
+                    null,
+
+                  gender:
+                    "",
+
+                  photoURL:
+                    user.photoURL || "",
+
+                  status:
+                    "online",
+
+                  createdAt:
+                    serverTimestamp(),
+
+                  lastActiveAt:
+                    serverTimestamp()
+                },
+                {
+                  merge: true
+                }
+              );
+
+            }
+          );
+
+
+          showMessage(
+            "Google account connected. Opening ConnectNow...",
+            "success"
+          );
+
+
+          setTimeout(
+            goHome,
+            300
+          );
+
+        } catch (error) {
+
+          console.error(
+            "Google login error:",
+            error
+          );
+
+
+          showMessage(
+            firebaseErrorMessage(
+              error
+            ),
+            "error"
+          );
+
+
+          setButtonsDisabled(false);
+        }
+      }
+    );
+
+
+    /* =====================================================
+       GUEST LOGIN
+    ===================================================== */
+
+    guestForm.addEventListener(
+      "submit",
+      async (event) => {
+
+        event.preventDefault();
+
+
+        const displayName =
+          cleanName(
+            displayNameInput.value
+          );
+
+
+        const age =
+          Number(
+            ageInput.value
+          );
+
+
+        const gender =
+          genderInput.value;
+
+
+        if (
+          !isValidDisplayName(
+            displayName
+          )
+        ) {
+
+          showMessage(
+            "Use a unique name with 3-30 characters.",
+            "error"
+          );
+
+          displayNameInput.focus();
+
+          return;
+        }
+
+
+        if (
+          !Number.isInteger(age) ||
+          age < 18 ||
+          age > 120
+        ) {
+
+          showMessage(
+            "Guest login is available only for users aged 18 or above.",
+            "error"
+          );
+
+          ageInput.focus();
+
+          return;
+        }
+
+
+        if (!gender) {
+
+          showMessage(
+            "Please select your gender.",
+            "error"
+          );
+
+          genderInput.focus();
+
+          return;
+        }
+
+
+        if (
+          !ageConfirmation.checked
+        ) {
+
+          showMessage(
+            "Please confirm that you are 18 or above.",
+            "error"
+          );
+
+          return;
+        }
+
+
+        if (
+          !termsConfirmation.checked
+        ) {
+
+          showMessage(
+            "Please accept the Terms and Community Guidelines.",
+            "error"
+          );
+
+          return;
+        }
+
+
+        setButtonsDisabled(true);
+
+        showMessage(
+          "Saving your profile...",
+          "info"
+        );
+
+
+        try {
+
+          /*
+            Reuse existing anonymous account
+            on this browser when available.
+          */
+
+        await auth.authStateReady();
+
+        let user =
+          auth.currentUser;
+
+
+        /*
+          EXISTING GUEST ACCOUNT
+          SAME USER
+        */
+
+        if (
+          user &&
+          user.isAnonymous
+        ) {
+
+          const userRef =
+            doc(
+              db,
+              "users",
+              user.uid
+            );
+
+          const existingProfile =
+            await getDoc(
+              userRef
+            );
+
+
+          if (
+            existingProfile.exists() &&
+            existingProfile.data().displayName
+          ) {
+
+            const profile =
+              existingProfile.data();
+
+
+            /*
+              SAME FIREBASE UID
+              DON'T CREATE NEW ACCOUNT
+            */
+
+            localStorage.setItem(
+              "connectnow_guest_profile",
+              JSON.stringify({
+                displayName:
+                  profile.displayName,
+
+                age:
+                  profile.age || "",
+
+                gender:
+                  profile.gender || ""
+              })
+            );
+
+
+            showMessage(
+              `Welcome back, ${profile.displayName}. Opening ConnectNow...`,
+              "success"
+            );
+
+
+            setTimeout(
+              () => {
+                goHome();
+              },
+              300
+            );
+
+
+            return;
+          }
+        }
+
+
+        /*
+          NO EXISTING GUEST ACCOUNT
+          ONLY NOW CREATE NEW ACCOUNT
+        */
+
+        if (!user) {
+
+          const result =
+            await signInAnonymously(
+              auth
+            );
+
+          user =
+            result.user;
+        }
+
+
+          await saveGuestProfile(
+            user,
+            displayName,
+            age,
+            gender
+          );
+
+
+          showMessage(
+            "Profile saved. Opening ConnectNow...",
+            "success"
+          );
+
+
+          setTimeout(
+            goHome,
+            300
+          );
+
+        } catch (error) {
+
+          console.error(
+            "Guest login error:",
+            error
+          );
+
+
+          if (
+            error.code ===
+            "display-name-taken"
+          ) {
+
+            showMessage(
+              "This display name is already taken. Please choose another name.",
+              "error"
+            );
+
+          } else {
+
+            showMessage(
+              firebaseErrorMessage(
+                error
+              ),
+              "error"
+            );
+          }
+
+
+          setButtonsDisabled(false);
+        }
+      }
+    );
+
+
+    /* =====================================================
+       EXISTING GUEST PROFILE AUTO-FILL
+    ===================================================== */
+
+    onAuthStateChanged(
+      auth,
+      async (user) => {
+
+        currentAuthUser =
+          user;
+
+
+        /*
+          Tell the Guest button that
+          Firebase finished restoring
+          the previous session.
+        */
+
+        authReadyResolve(
+          user
+        );
+
+
+        if (
+          !user
+        ) {
+
+          return;
+
+        }
+
+
+        if (
+          !user.isAnonymous
+        ) {
+
+          return;
+
+        }
+
+
+        try {
+
+          const userRef =
+            doc(
+              db,
+              "users",
+              user.uid
+            );
+
+
+          const snap =
+            await getDoc(
+              userRef
+            );
+
+
+          if (
+            snap.exists()
+          ) {
+
+            const data =
+              snap.data();
+
+
+            if (
+              data.displayName
+            ) {
+
+              localStorage.setItem(
+                "connectnow_guest_profile",
+                JSON.stringify({
+                  displayName:
+                    data.displayName,
+
+                  age:
+                    data.age || "",
+
+                  gender:
+                    data.gender || ""
+                })
+              );
+
+
+              displayNameInput.value =
+                data.displayName || "";
+
+
+              ageInput.value =
+                data.age || "";
+
+
+              genderInput.value =
+                data.gender || "";
+
+
+              showMessage(
+                `Welcome back, ${data.displayName}.`,
+                "info"
+              );
+
+            }
+
+          }
+
+        } catch (error) {
+
+          console.warn(
+            "Existing guest profile load failed:",
+            error
+          );
+
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
