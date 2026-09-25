@@ -127,7 +127,7 @@ class RandomVideoMatcher {
 
     return (
       window.CONNECTNOW_SOCKET_URL ||
-      "http://localhost:5000"
+      "https://connectnow-n26j.onrender.com"
     );
 
   }

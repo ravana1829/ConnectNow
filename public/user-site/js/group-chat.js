@@ -32,7 +32,7 @@ import {
 
 const SERVER_URL =
   window.CONNECTNOW_SERVER_URL ||
-  "http://localhost:5000";
+  "https://connectnow-n26j.onrender.com";
 
 
 const COMMUNITY_GROUP_ID =
