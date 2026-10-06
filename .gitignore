@@ -1,2 +1,9 @@
 backend/node_modules/
 backend/config/*-firebase-adminsdk-*.json
+
+# Environment variables and private credentials
+.env
+.env.*
+!.env.example
+*serviceAccount*.json
+*firebase-adminsdk*.json

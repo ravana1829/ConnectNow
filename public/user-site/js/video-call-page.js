@@ -1,7 +1,6 @@
 /* =========================================================
    CONNECTNOW RANDOM VIDEO CALL PAGE
-   OLD UI PRESERVED
-   REAL SOCKET.IO + WEBRTC
+   VIDEO + CHAT UI
    ========================================================= */
 
 import {
@@ -13,113 +12,142 @@ import {
   setAvatar
 } from "./auth-helper.js";
 
-import RandomVideoMatcher
-  from "./random-video-matcher.js";
+import RandomVideoMatcher from "./random-video-matcher.js";
 
 
 /* =========================================================
-   ELEMENTS
-   ========================================================= */
+   NAVIGATION
+========================================================= */
 
 const mobileMenuBtn =
-  document.getElementById("mobileMenuBtn");
+  document.getElementById(
+    "mobileMenuBtn"
+  );
 
 const mobileNav =
-  document.getElementById("mobileNav");
+  document.getElementById(
+    "mobileNav"
+  );
 
 const rewardsMenuBtn =
-  document.getElementById("rewardsMenuBtn");
+  document.getElementById(
+    "rewardsMenuBtn"
+  );
 
 const rewardsMenu =
-  document.getElementById("rewardsMenu");
+  document.getElementById(
+    "rewardsMenu"
+  );
 
 const profileMenuBtn =
-  document.getElementById("profileMenuBtn");
+  document.getElementById(
+    "profileMenuBtn"
+  );
 
 const profileMenu =
-  document.getElementById("profileMenu");
+  document.getElementById(
+    "profileMenu"
+  );
 
 const dropdownLogoutBtn =
-  document.getElementById("dropdownLogoutBtn");
+  document.getElementById(
+    "dropdownLogoutBtn"
+  );
 
 const mobileLogoutBtn =
-  document.getElementById("mobileLogoutBtn");
-
-
-/* =========================================================
-   USER UI
-   ========================================================= */
+  document.getElementById(
+    "mobileLogoutBtn"
+  );
 
 const navUserName =
-  document.getElementById("navUserName");
+  document.getElementById(
+    "navUserName"
+  );
 
 const navUserAvatar =
-  document.getElementById("navUserAvatar");
+  document.getElementById(
+    "navUserAvatar"
+  );
 
 const dropdownUserName =
-  document.getElementById("dropdownUserName");
+  document.getElementById(
+    "dropdownUserName"
+  );
 
 const dropdownUserEmail =
-  document.getElementById("dropdownUserEmail");
+  document.getElementById(
+    "dropdownUserEmail"
+  );
 
 const dropdownUserAvatar =
-  document.getElementById("dropdownUserAvatar");
-
-
-/* =========================================================
-   VIDEO UI
-   ========================================================= */
-
-const remoteVideo =
-  document.getElementById("remoteVideo");
-
-const localVideo =
-  document.getElementById("localVideo");
-
-const remoteVideoPlaceholder =
   document.getElementById(
-    "remoteVideoPlaceholder"
-  );
-
-const localVideoPlaceholder =
-  document.getElementById(
-    "localVideoPlaceholder"
-  );
-
-const videoPlaceholder =
-  document.getElementById(
-    "videoPlaceholder"
+    "dropdownUserAvatar"
   );
 
 
 /* =========================================================
-   CALL UI
-   ========================================================= */
+   VIDEO DOM
+========================================================= */
 
-const callHeader =
-  document.getElementById("callHeader");
+const videoFeed =
+  document.getElementById(
+    "videoFeed"
+  );
+
+const localVideoBox =
+  document.getElementById(
+    "localVideo"
+  );
+
+const videoWindow =
+  document.getElementById(
+    "videoWindow"
+  );
 
 const callerName =
-  document.getElementById("callerName");
-
-const callTimer =
-  document.getElementById("callTimer");
-
-const statusText =
-  document.getElementById("statusText");
-
-const infoText =
-  document.getElementById("infoText");
-
-const videoNotification =
   document.getElementById(
-    "videoNotification"
+    "callerName"
   );
 
+const callHeader =
+  document.getElementById(
+    "callHeader"
+  );
 
-/* =========================================================
-   SIDEBAR
-   ========================================================= */
+const callTimer =
+  document.getElementById(
+    "callTimer"
+  );
+
+const muteMicBtn =
+  document.getElementById(
+    "muteMicBtn"
+  );
+
+const endCallBtn =
+  document.getElementById(
+    "endCallBtn"
+  );
+
+const toggleCameraBtn =
+  document.getElementById(
+    "toggleCameraBtn"
+  );
+
+const nextBtn =
+  document.getElementById(
+    "nextBtn"
+  );
+
+const reportBtn =
+  document.getElementById(
+    "reportBtn"
+  );
+
+const blockBtn =
+  document.getElementById(
+    "blockBtn"
+  );
 
 const sidebarContent =
   document.getElementById(
@@ -136,45 +164,15 @@ const timeLimitWarning =
     "timeLimitWarning"
   );
 
-
-/* =========================================================
-   BUTTONS
-   ========================================================= */
-
-const startBtn =
-  document.getElementById("startBtn");
-
-const nextBtn =
-  document.getElementById("nextBtn");
-
-const endBtn =
-  document.getElementById("endBtn");
-
-const backBtn =
-  document.getElementById("backBtn");
-
-const muteMicBtn =
-  document.getElementById("muteMicBtn");
-
-const toggleCameraBtn =
+const freeVideoBadge =
   document.getElementById(
-    "toggleCameraBtn"
-  );
-
-const videoReportBtn =
-  document.getElementById(
-    "videoReportBtn"
-  );
-
-const videoBlockBtn =
-  document.getElementById(
-    "videoBlockBtn"
+    "freeVideoBadge"
   );
 
 
 /* =========================================================
-   CHAT
-   ========================================================= */
+   VIDEO CHAT DOM
+========================================================= */
 
 const videoChatMessages =
   document.getElementById(
@@ -194,171 +192,127 @@ const videoChatSendBtn =
 
 /* =========================================================
    STATE
-   ========================================================= */
+========================================================= */
 
-let pageReady =
-  false;
+let remoteVideo = null;
+let localVideo = null;
 
-let callActive =
-  false;
+let searchRunning = false;
+let callActive = false;
+let callConnected = false;
 
-let callConnected =
-  false;
+let isMuted = false;
+let isCameraOn = true;
 
-let searching =
-  false;
+let timerInterval = null;
+let callStartTime = null;
 
-let startingCall =
-  false;
+let freeAttemptConsumed = false;
 
-let nextInProgress =
-  false;
-
-let isMuted =
-  false;
-
-let isCameraOn =
-  true;
-
-let currentSocket =
-  null;
-
-let chatListenersAttached =
-  false;
-
-let timerInterval =
-  null;
-
-let callStartTime =
-  null;
-
-let currentPartnerUserId =
-  null;
-
-let currentPartnerSocketId =
-  null;
-
-let countedThisCall =
-  false;
+let authenticated = false;
+let nextPending = false;
 
 
-/*
-  Preserve the old 2:00 timer.
-*/
+/* =========================================================
+   CONSTANTS
+========================================================= */
+
 const FREE_CALL_DURATION =
   120;
 
 
 /* =========================================================
-   INITIALIZE
-   ========================================================= */
+   CREATE VIDEO ELEMENT
+========================================================= */
 
-async function initializePage() {
+function makeVideoElement(
+  id,
+  muted
+) {
 
-  try {
-
-    const protectedResult =
-      await protectPage();
-
-
-    if (!protectedResult) {
-      return;
-    }
-
-
-    onAuthReady(
-      async (
-        user,
-        profile
-      ) => {
-
-        if (
-          !user ||
-          !profile
-        ) {
-
-          return;
-
-        }
-
-
-        pageReady =
-          true;
-
-
-        updateUserUI();
-
-        updateFreeUsageUI();
-
-        updateButtons();
-
-        attachMatcherCallbacks();
-
-
-        /*
-          Prepare Socket.IO once.
-          Important:
-          We use the socket inside RandomVideoMatcher.
-          We DO NOT create another socket here.
-        */
-        try {
-
-          currentSocket =
-            await RandomVideoMatcher.ensureSocket();
-
-          attachChatSocketEvents();
-
-        } catch (error) {
-
-          console.error(
-            "Random Video socket initialization error:",
-            error
-          );
-
-          showStatus(
-            "Disconnected",
-            "Unable to connect to ConnectNow server."
-          );
-
-        }
-
-
-        /*
-          Automatically start when free calls are available.
-        */
-        setTimeout(
-          () => {
-
-            if (
-              pageReady &&
-              getFreeCount() > 0 &&
-              !callActive &&
-              !searching &&
-              !startingCall
-            ) {
-
-              startCall();
-
-            }
-
-          },
-          500
-        );
-
-      }
+  const video =
+    document.createElement(
+      "video"
     );
 
-  } catch (error) {
+  video.id = id;
 
-    console.error(
-      "Video page initialization error:",
-      error
+  video.autoplay =
+    true;
+
+  video.playsInline =
+    true;
+
+  video.muted =
+    Boolean(muted);
+
+  video.setAttribute(
+    "playsinline",
+    ""
+  );
+
+  video.style.width =
+    "100%";
+
+  video.style.height =
+    "100%";
+
+  video.style.objectFit =
+    "cover";
+
+  video.style.background =
+    "#000";
+
+  video.style.borderRadius =
+    "inherit";
+
+  return video;
+}
+
+
+/* =========================================================
+   PREPARE VIDEO UI
+========================================================= */
+
+function prepareVideoUI() {
+
+  if (
+    videoFeed &&
+    !remoteVideo
+  ) {
+
+    videoFeed.innerHTML =
+      "";
+
+    remoteVideo =
+      makeVideoElement(
+        "remoteVideo",
+        false
+      );
+
+    videoFeed.appendChild(
+      remoteVideo
     );
 
+  }
 
-    showStatus(
-      "Error",
-      "Unable to initialize Video Call."
+
+  if (
+    localVideoBox &&
+    !localVideo
+  ) {
+
+    localVideoBox.innerHTML =
+      "";
+
+    localVideo =
+      makeVideoElement(
+        "localVideoElement",
+        true
+      );
+
+    localVideoBox.appendChild(
+      localVideo
     );
 
   }
@@ -367,15 +321,8 @@ async function initializePage() {
 
 
 /* =========================================================
-   START INITIALIZATION
-   ========================================================= */
-
-initializePage();
-
-
-/* =========================================================
    USER UI
-   ========================================================= */
+========================================================= */
 
 function updateUserUI() {
 
@@ -387,16 +334,12 @@ function updateUserUI() {
     currentProfile?.email ||
     "ConnectNow account";
 
-
-  if (
-    navUserName
-  ) {
+  if (navUserName) {
 
     navUserName.textContent =
       name;
 
   }
-
 
   if (
     dropdownUserName
@@ -407,7 +350,6 @@ function updateUserUI() {
 
   }
 
-
   if (
     dropdownUserEmail
   ) {
@@ -417,17 +359,17 @@ function updateUserUI() {
 
   }
 
-
   setAvatar(
     navUserAvatar,
-    currentProfile?.photoURL || "",
+    currentProfile?.photoURL ||
+      "",
     name
   );
 
-
   setAvatar(
     dropdownUserAvatar,
-    currentProfile?.photoURL || "",
+    currentProfile?.photoURL ||
+      "",
     name
   );
 
@@ -436,27 +378,31 @@ function updateUserUI() {
 
 /* =========================================================
    FREE COUNT
-   ========================================================= */
+========================================================= */
 
 function getFreeCount() {
 
   return Number(
-    currentProfile?.randomVideoChatFreeCount ||
-    0
+    currentProfile
+      ?.randomVideoChatFreeCount ??
+      0
   );
 
 }
 
 
-function updateFreeUsageUI() {
+/* =========================================================
+   FREE UI
+========================================================= */
+
+function updateFreeUI() {
 
   const count =
     getFreeCount();
 
+  updateFreeBadge();
 
-  if (
-    noFreeWarning
-  ) {
+  if (noFreeWarning) {
 
     noFreeWarning.style.display =
       count <= 0
@@ -465,10 +411,7 @@ function updateFreeUsageUI() {
 
   }
 
-
-  if (
-    timeLimitWarning
-  ) {
+  if (timeLimitWarning) {
 
     timeLimitWarning.style.display =
       count > 0
@@ -477,45 +420,94 @@ function updateFreeUsageUI() {
 
   }
 
+}
 
-  if (
-    count <= 0
-  ) {
 
-    showSidebar(
-      "❌ No free video calls remaining. Please use your wallet to continue."
-    );
+/* =========================================================
+   SIDEBAR SUPPORT
+========================================================= */
+
+function setSidebar(
+  message
+) {
+
+  if (sidebarContent) {
+
+    sidebarContent.innerHTML =
+      `<p>${escapeHtml(message)}</p>`;
 
   }
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHtml(
+  value
+) {
+
+  return String(
+    value || ""
+  )
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 
 }
 
 
 /* =========================================================
    STATUS
-   ========================================================= */
+========================================================= */
 
-function showStatus(
+function setStatus(
   status,
-  message
+  info
 ) {
 
-  if (
-    statusText
-  ) {
+  if (callerName) {
 
-    statusText.textContent =
-      status;
+    callerName.textContent =
+      status ||
+      "Connecting...";
 
   }
 
+  if (callHeader) {
+
+    callHeader.style.display =
+      "block";
+
+  }
 
   if (
-    infoText
+    sidebarContent &&
+    info
   ) {
 
-    infoText.textContent =
-      message;
+    setSidebar(
+      info
+    );
 
   }
 
@@ -523,206 +515,219 @@ function showStatus(
 
 
 /* =========================================================
-   NOTIFICATION
-   ========================================================= */
+   LOADING TEXT
+========================================================= */
 
-function showNotification(
-  message
-) {
+function showLoadingText() {
 
-  if (
-    !videoNotification
-  ) {
+  prepareVideoUI();
 
-    return;
+  if (remoteVideo) {
+
+    remoteVideo.srcObject =
+      null;
 
   }
 
+  if (
+    videoFeed &&
+    !remoteVideo?.srcObject
+  ) {
 
-  videoNotification.textContent =
-    String(
-      message ||
-      ""
-    );
+    if (
+      !videoFeed.querySelector(
+        ".video-loading-message"
+      )
+    ) {
 
+      const message =
+        document.createElement(
+          "span"
+        );
 
-  videoNotification.classList.add(
-    "show"
-  );
+      message.className =
+        "video-loading-message";
 
+      message.textContent =
+        "Loading video feed...";
 
-  setTimeout(
-    () => {
+      message.style.position =
+        "absolute";
 
-      videoNotification.classList.remove(
-        "show"
+      message.style.zIndex =
+        "2";
+
+      videoFeed.style.position =
+        "relative";
+
+      videoFeed.appendChild(
+        message
       );
 
-    },
-    3500
-  );
+    }
+
+  }
 
 }
 
 
 /* =========================================================
-   SIDEBAR
-   ========================================================= */
+   REMOVE LOADING
+========================================================= */
 
-function showSidebar(
-  message
-) {
+function removeLoadingText() {
+
+  videoFeed
+    ?.querySelector(
+      ".video-loading-message"
+    )
+    ?.remove();
+
+}
+
+
+/* =========================================================
+   LOCAL STREAM
+========================================================= */
+
+function attachLocalStream() {
+
+  prepareVideoUI();
+
+  const stream =
+    RandomVideoMatcher.getLocalStream();
 
   if (
-    !sidebarContent
+    !localVideo ||
+    !stream
   ) {
 
     return;
 
   }
 
+  localVideo.srcObject =
+    stream;
 
-  sidebarContent.textContent =
-    "";
-
-
-  const p =
-    document.createElement(
-      "p"
+  localVideo
+    .play?.()
+    .catch(
+      () => {}
     );
 
+  if (localVideoBox) {
 
-  p.textContent =
-    String(
-      message ||
-      ""
-    );
+    localVideoBox.style.overflow =
+      "hidden";
 
-
-  sidebarContent.appendChild(
-    p
-  );
+  }
 
 }
 
 
 /* =========================================================
-   BUTTON STATE
-   ========================================================= */
+   REMOTE STREAM
+========================================================= */
 
-function updateButtons() {
+function attachRemoteStream(
+  stream
+) {
 
-  const hasCall =
-    Boolean(
-      callActive &&
-      RandomVideoMatcher.getRoomId()
+  prepareVideoUI();
+
+  removeLoadingText();
+
+  if (
+    !remoteVideo ||
+    !stream
+  ) {
+
+    return;
+
+  }
+
+  remoteVideo.srcObject =
+    stream;
+
+  remoteVideo
+    .play?.()
+    .catch(
+      () => {}
     );
 
-
-  if (
-    startBtn
-  ) {
-
-    startBtn.disabled =
-      callActive ||
-      searching ||
-      startingCall;
-
-  }
+}
 
 
-  if (
-    nextBtn
-  ) {
+/* =========================================================
+   FREE BADGE
+========================================================= */
 
-    nextBtn.disabled =
-      startingCall ||
-      nextInProgress;
+function updateFreeBadge() {
+
+  if (freeVideoBadge) {
+
+    freeVideoBadge.textContent =
+      `Free: ${getFreeCount()}/10`;
 
   }
 
+}
+
+
+/* =========================================================
+   ADD CHAT MESSAGE
+========================================================= */
+
+function addChatMessage(
+  message,
+  type = "theirs"
+) {
 
   if (
-    endBtn
+    !videoChatMessages ||
+    !message
   ) {
 
-    endBtn.disabled =
-      !hasCall;
+    return;
 
   }
 
+  const item =
+    document.createElement(
+      "div"
+    );
 
-  if (
-    muteMicBtn
-  ) {
+  item.className =
+    `video-chat-message ${
+      type === "mine"
+        ? "mine"
+        : "theirs"
+    }`;
 
-    muteMicBtn.disabled =
-      !hasCall;
+  item.textContent =
+    `${
+      type === "mine"
+        ? "You"
+        : "Stranger"
+    }: ${message}`;
 
-  }
+  videoChatMessages.appendChild(
+    item
+  );
 
-
-  if (
-    toggleCameraBtn
-  ) {
-
-    toggleCameraBtn.disabled =
-      !hasCall;
-
-  }
-
-
-  if (
-    videoReportBtn
-  ) {
-
-    videoReportBtn.disabled =
-      !hasCall;
-
-  }
-
-
-  if (
-    videoBlockBtn
-  ) {
-
-    videoBlockBtn.disabled =
-      !hasCall;
-
-  }
-
-
-  if (
-    videoChatInput
-  ) {
-
-    videoChatInput.disabled =
-      !callConnected;
-
-  }
-
-
-  if (
-    videoChatSendBtn
-  ) {
-
-    videoChatSendBtn.disabled =
-      !callConnected;
-
-  }
+  videoChatMessages.scrollTop =
+    videoChatMessages.scrollHeight;
 
 }
 
 
 /* =========================================================
    CLEAR CHAT
-   ========================================================= */
+========================================================= */
 
 function clearChat() {
 
-  if (
-    videoChatMessages
-  ) {
+  if (videoChatMessages) {
 
     videoChatMessages.innerHTML =
       "";
@@ -733,1148 +738,19 @@ function clearChat() {
 
 
 /* =========================================================
-   ADD CHAT MESSAGE
-   ========================================================= */
-
-function addChatMessage(
-  message,
-  type
-) {
-
-  if (
-    !videoChatMessages
-  ) {
-
-    return;
-
-  }
-
-
-  const cleanMessage =
-    String(
-      message ||
-      ""
-    ).trim();
-
-
-  if (
-    !cleanMessage
-  ) {
-
-    return;
-
-  }
-
-
-  const element =
-    document.createElement(
-      "div"
-    );
-
-
-  element.className =
-    `video-chat-message ${type}`;
-
-
-  element.textContent =
-    cleanMessage;
-
-
-  videoChatMessages.appendChild(
-    element
-  );
-
-
-  videoChatMessages.scrollTop =
-    videoChatMessages.scrollHeight;
-
-}
-
-
-/* =========================================================
-   CHAT SOCKET EVENTS
-   ========================================================= */
-
-function attachChatSocketEvents() {
-
-  if (
-    chatListenersAttached ||
-    !currentSocket
-  ) {
-
-    return;
-
-  }
-
-
-  chatListenersAttached =
-    true;
-
-
-  currentSocket.on(
-    "videoChatMessage",
-    (
-      data = {}
-    ) => {
-
-      /*
-        Only display partner messages.
-      */
-      if (
-        data.userId &&
-        currentProfile?.userId &&
-        data.userId ===
-          currentProfile.userId
-      ) {
-
-        return;
-
-      }
-
-
-      if (
-        !callActive
-      ) {
-
-        return;
-
-      }
-
-
-      addChatMessage(
-        data.message,
-        "theirs"
-      );
-
-    }
-  );
-
-
-  currentSocket.on(
-    "reportSubmitted",
-    () => {
-
-      showNotification(
-        "Report submitted."
-      );
-
-    }
-  );
-
-
-  currentSocket.on(
-    "userBlocked",
-    () => {
-
-      showNotification(
-        "User blocked."
-      );
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   MATCHER CALLBACKS
-   ========================================================= */
-
-let matcherCallbacksAttached =
-  false;
-
-
-function attachMatcherCallbacks() {
-
-  if (
-    matcherCallbacksAttached
-  ) {
-
-    return;
-
-  }
-
-
-  matcherCallbacksAttached =
-    true;
-
-
-  /* =======================================================
-     MATCH
-     ======================================================= */
-
-  RandomVideoMatcher.onMatch(
-    (
-      partner,
-      data = {}
-    ) => {
-
-      if (
-        data.waiting
-      ) {
-
-        searching =
-          true;
-
-        callActive =
-          false;
-
-        callConnected =
-          false;
-
-
-        showStatus(
-          "Searching...",
-          "Finding a random video-call partner..."
-        );
-
-
-        showSidebar(
-          "🔍 Searching for a random person..."
-        );
-
-
-        if (
-          callerName
-        ) {
-
-          callerName.textContent =
-            "Connecting...";
-
-        }
-
-
-        updateButtons();
-
-
-        return;
-
-      }
-
-
-      if (
-        !partner
-      ) {
-
-        return;
-
-      }
-
-
-      searching =
-        false;
-
-      callActive =
-        true;
-
-      callConnected =
-        false;
-
-
-      currentPartnerUserId =
-        partner.userId ||
-        partner.uid ||
-        partner.id ||
-        null;
-
-
-      currentPartnerSocketId =
-        partner.socketId ||
-        null;
-
-
-      const partnerName =
-        partner.displayName ||
-        "Stranger";
-
-
-      if (
-        callerName
-      ) {
-
-        callerName.textContent =
-          partnerName;
-
-      }
-
-
-      if (
-        callHeader
-      ) {
-
-        callHeader.style.display =
-          "block";
-
-      }
-
-
-      showStatus(
-        "Connecting...",
-        `Connecting with ${partnerName}...`
-      );
-
-
-      showSidebar(
-        `🔄 Connecting you with ${partnerName}...`
-      );
-
-
-      showNotification(
-        "Random person connected!"
-      );
-
-
-      clearChat();
-
-
-      setChatEnabled(
-        false
-      );
-
-
-      showRemotePlaceholder(
-        true
-      );
-
-
-      updateButtons();
-
-    }
-  );
-
-
-  /* =======================================================
-     REMOTE STREAM
-     ======================================================= */
-
-  RandomVideoMatcher.onRemoteStream(
-    (
-      stream
-    ) => {
-
-      if (
-        !remoteVideo
-      ) {
-
-        return;
-
-      }
-
-
-      remoteVideo.srcObject =
-        stream;
-
-
-      showRemotePlaceholder(
-        false
-      );
-
-
-      const playPromise =
-        remoteVideo.play();
-
-
-      if (
-        playPromise &&
-        typeof playPromise.catch ===
-          "function"
-      ) {
-
-        playPromise.catch(
-          (
-            error
-          ) => {
-
-            console.warn(
-              "Remote video play warning:",
-              error
-            );
-
-          }
-        );
-
-      }
-
-
-      callConnected =
-        true;
-
-      callActive =
-        true;
-
-      searching =
-        false;
-
-
-      setChatEnabled(
-        true
-      );
-
-
-      const partner =
-        RandomVideoMatcher.getMatchedUser();
-
-
-      showStatus(
-        "Connected",
-        `${partner?.displayName || "Stranger"} is now connected`
-      );
-
-
-      showSidebar(
-        "✅ Video call connected. You can now talk with the other person."
-      );
-
-
-      if (
-        callStartTime === null
-      ) {
-
-        startTimer();
-
-      }
-
-
-      updateButtons();
-
-    }
-  );
-
-
-  /* =======================================================
-     CONNECTION STATE
-     ======================================================= */
-
-  RandomVideoMatcher.onConnectionState(
-    (
-      state
-    ) => {
-
-      console.log(
-        "Random Video connection state:",
-        state
-      );
-
-
-      switch (
-        state
-      ) {
-
-        case "new":
-
-          showStatus(
-            "Connecting...",
-            "Preparing video connection..."
-          );
-
-          break;
-
-
-        case "connecting":
-
-          showStatus(
-            "Connecting...",
-            "Establishing secure video connection..."
-          );
-
-          break;
-
-
-        case "connected":
-
-          callActive =
-            true;
-
-          callConnected =
-            true;
-
-          searching =
-            false;
-
-
-          setChatEnabled(
-            true
-          );
-
-
-          if (
-            callStartTime === null
-          ) {
-
-            startTimer();
-
-          }
-
-
-          showRemotePlaceholder(
-            false
-          );
-
-
-          showStatus(
-            "Connected",
-            "Random person-oda video call connected!"
-          );
-
-
-          showSidebar(
-            "✅ Video connection is active."
-          );
-
-
-          updateButtons();
-
-          break;
-
-
-        case "disconnected":
-
-          callConnected =
-            false;
-
-
-          showStatus(
-            "Disconnected",
-            "Video connection was interrupted."
-          );
-
-
-          showSidebar(
-            "⚠️ Video connection was interrupted."
-          );
-
-
-          updateButtons();
-
-          break;
-
-
-        case "failed":
-
-          callConnected =
-            false;
-
-
-          showStatus(
-            "Failed",
-            "Video connection failed. Please try Next Person."
-          );
-
-
-          showSidebar(
-            "❌ Video connection failed. Try Next Person."
-          );
-
-
-          updateButtons();
-
-          break;
-
-
-        case "closed":
-
-          callConnected =
-            false;
-
-          break;
-
-      }
-
-    }
-  );
-
-
-  /* =======================================================
-     PARTNER ENDED
-     ======================================================= */
-
-  RandomVideoMatcher.onPartnerEnded(
-    () => {
-
-      callActive =
-        false;
-
-      callConnected =
-        false;
-
-      searching =
-        false;
-
-
-      stopTimer();
-
-
-      clearVideoStreams();
-
-      setChatEnabled(
-        false
-      );
-
-
-      currentPartnerUserId =
-        null;
-
-      currentPartnerSocketId =
-        null;
-
-
-      showStatus(
-        "Partner left",
-        "Your partner left the call."
-      );
-
-
-      showSidebar(
-        "📞 The other person has left the call."
-      );
-
-
-      showNotification(
-        "Your partner left the call."
-      );
-
-
-      updateButtons();
-
-    }
-  );
-
-
-  /* =======================================================
-     NEXT READY
-     ======================================================= */
-
-  RandomVideoMatcher.onNextReady(
-    () => {
-
-      searching =
-        true;
-
-      callActive =
-        false;
-
-      callConnected =
-        false;
-
-
-      showStatus(
-        "Searching...",
-        "Finding the next random person..."
-      );
-
-
-      showSidebar(
-        "🔄 Finding the next random person..."
-      );
-
-
-      updateButtons();
-
-    }
-  );
-
-
-  /* =======================================================
-     SERVER ERROR
-     ======================================================= */
-
-  RandomVideoMatcher.onServerError(
-    (
-      message
-    ) => {
-
-      searching =
-        false;
-
-      callActive =
-        false;
-
-      callConnected =
-        false;
-
-
-      showStatus(
-        "Error",
-        message ||
-        "Random video server error."
-      );
-
-
-      showSidebar(
-        `❌ ${
-          message ||
-          "Random video server error."
-        }`
-      );
-
-
-      updateButtons();
-
-    }
-  );
-
-
-  /* =======================================================
-     MEDIA ERROR
-     ======================================================= */
-
-  RandomVideoMatcher.onMediaError(
-    (
-      error
-    ) => {
-
-      searching =
-        false;
-
-      callActive =
-        false;
-
-      callConnected =
-        false;
-
-
-      let message =
-        "Camera and microphone permission are required.";
-
-
-      if (
-        error?.name ===
-        "NotAllowedError"
-      ) {
-
-        message =
-          "❌ Camera/microphone permission was denied. Please allow access.";
-
-      }
-
-
-      else if (
-        error?.name ===
-        "NotFoundError"
-      ) {
-
-        message =
-          "❌ Camera or microphone was not found.";
-
-      }
-
-
-      else if (
-        error?.name ===
-        "NotReadableError"
-      ) {
-
-        message =
-          "❌ Camera or microphone is already being used by another application.";
-
-      }
-
-
-      showStatus(
-        "Permission required",
-        message
-      );
-
-
-      showSidebar(
-        message
-      );
-
-
-      showNotification(
-        message
-      );
-
-
-      updateButtons();
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   START CALL
-   ========================================================= */
-
-async function startCall() {
-
-  if (
-    !pageReady ||
-    startingCall ||
-    searching ||
-    callActive
-  ) {
-
-    return;
-
-  }
-
-
-  const freeCount =
-    getFreeCount();
-
-
-  if (
-    freeCount <= 0
-  ) {
-
-    updateFreeUsageUI();
-
-
-    alert(
-      "No free video calls remaining. Please visit your wallet."
-    );
-
-
-    return;
-
-  }
-
-
-  startingCall =
-    true;
-
-  searching =
-    true;
-
-  callActive =
-    false;
-
-  callConnected =
-    false;
-
-  countedThisCall =
-    false;
-
-
-  stopTimer();
-
-  clearVideoStreams();
-
-  clearChat();
-
-
-  currentPartnerUserId =
-    null;
-
-  currentPartnerSocketId =
-    null;
-
-
-  setChatEnabled(
-    false
-  );
-
-
-  showRemotePlaceholder(
-    true
-  );
-
-
-  if (
-    callHeader
-  ) {
-
-    callHeader.style.display =
-      "block";
-
-  }
-
-
-  if (
-    callerName
-  ) {
-
-    callerName.textContent =
-      "Connecting...";
-
-  }
-
-
-  if (
-    callTimer
-  ) {
-
-    callTimer.textContent =
-      "2:00";
-
-  }
-
-
-  showStatus(
-    "Connecting...",
-    "Preparing your camera and microphone..."
-  );
-
-
-  showSidebar(
-    "🎥 Preparing your camera and microphone..."
-  );
-
-
-  showNotification(
-    "Starting camera and microphone..."
-  );
-
-
-  updateButtons();
-
-
-  try {
-
-    /*
-      Start the actual:
-      camera
-      microphone
-      Socket.IO
-      random matching
-      WebRTC
-    */
-    await RandomVideoMatcher.startRandomVideoCall();
-
-
-    /*
-      Show local camera.
-    */
-    attachLocalStream();
-
-
-    /*
-      Decrement only once for this call attempt.
-    */
-    if (
-      !countedThisCall
-    ) {
-
-      const updated =
-        await decrementFreeRandomVideoChat();
-
-
-      if (
-        updated
-      ) {
-
-        countedThisCall =
-          true;
-
-        updateFreeUsageUI();
-
-      }
-
-    }
-
-
-    showStatus(
-      "Searching...",
-      "Finding a random person..."
-    );
-
-
-    showSidebar(
-      "🔍 Searching for a random video-call partner..."
-    );
-
-
-  } catch (
-    error
-  ) {
-
-    console.error(
-      "Start random video error:",
-      error
-    );
-
-
-    searching =
-      false;
-
-    callActive =
-      false;
-
-    callConnected =
-      false;
-
-
-    showStatus(
-      "Error",
-      "Unable to start Random Video."
-    );
-
-
-    showSidebar(
-      "❌ Unable to start Random Video. Make sure camera/microphone permission is allowed and backend is running."
-    );
-
-
-  } finally {
-
-    startingCall =
-      false;
-
-    updateButtons();
-
-  }
-
-}
-
-
-/* =========================================================
-   LOCAL STREAM
-   ========================================================= */
-
-function attachLocalStream() {
-
-  const stream =
-    RandomVideoMatcher.getLocalStream();
-
-
-  if (
-    !stream ||
-    !localVideo
-  ) {
-
-    return;
-
-  }
-
-
-  localVideo.srcObject =
-    stream;
-
-
-  if (
-    localVideoPlaceholder
-  ) {
-
-    localVideoPlaceholder.style.display =
-      "none";
-
-  }
-
-
-  localVideo.style.opacity =
-    "1";
-
-
-  const playPromise =
-    localVideo.play();
-
-
-  if (
-    playPromise &&
-    typeof playPromise.catch ===
-      "function"
-  ) {
-
-    playPromise.catch(
-      () => {}
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   REMOTE PLACEHOLDER
-   ========================================================= */
-
-function showRemotePlaceholder(
-  visible
-) {
-
-  if (
-    remoteVideoPlaceholder
-  ) {
-
-    remoteVideoPlaceholder.style.display =
-      visible
-        ? "block"
-        : "none";
-
-  }
-
-
-  if (
-    videoPlaceholder
-  ) {
-
-    /*
-      The old HTML has its own large placeholder.
-      Hide it once remote video appears.
-    */
-    videoPlaceholder.style.display =
-      visible
-        ? "flex"
-        : "none";
-
-  }
-
-}
-
-
-/* =========================================================
-   CLEAR VIDEO
-   ========================================================= */
-
-function clearVideoStreams() {
-
-  if (
-    remoteVideo
-  ) {
-
-    remoteVideo.srcObject =
-      null;
-
-  }
-
-
-  if (
-    localVideo
-  ) {
-
-    localVideo.srcObject =
-      null;
-
-  }
-
-
-  if (
-    localVideoPlaceholder
-  ) {
-
-    localVideoPlaceholder.style.display =
-      "block";
-
-  }
-
-
-  showRemotePlaceholder(
-    true
-  );
-
-}
-
-
-/* =========================================================
    ENABLE / DISABLE CHAT
-   ========================================================= */
+========================================================= */
 
 function setChatEnabled(
   enabled
 ) {
 
-  if (
-    videoChatInput
-  ) {
+  if (videoChatInput) {
 
     videoChatInput.disabled =
       !enabled;
 
   }
-
 
   if (
     videoChatSendBtn
@@ -1885,23 +761,62 @@ function setChatEnabled(
 
   }
 
+}
+
+
+/* =========================================================
+   SEND CHAT
+========================================================= */
+
+async function sendChatMessage() {
 
   if (
-    videoReportBtn
+    !callConnected ||
+    !videoChatInput
   ) {
 
-    videoReportBtn.disabled =
-      !enabled;
+    return;
 
   }
 
+  const message =
+    videoChatInput.value.trim();
 
-  if (
-    videoBlockBtn
-  ) {
+  if (!message) {
 
-    videoBlockBtn.disabled =
-      !enabled;
+    return;
+
+  }
+
+  try {
+
+    const sent =
+      await RandomVideoMatcher.sendChatMessage(
+        message
+      );
+
+    if (!sent) {
+
+      return;
+
+    }
+
+    addChatMessage(
+      message,
+      "mine"
+    );
+
+    videoChatInput.value =
+      "";
+
+    videoChatInput.focus();
+
+  } catch (error) {
+
+    console.error(
+      "Video chat send error",
+      error
+    );
 
   }
 
@@ -1909,126 +824,530 @@ function setChatEnabled(
 
 
 /* =========================================================
-   SEND CHAT MESSAGE
-   ========================================================= */
+   TIMER
+========================================================= */
 
-function sendChatMessage() {
+function startTimer() {
+
+  stopTimer();
+
+  callStartTime =
+    Date.now();
+
+  updateTimer();
+
+  timerInterval =
+    setInterval(
+      updateTimer,
+      1000
+    );
+
+}
+
+
+/* =========================================================
+   UPDATE TIMER
+========================================================= */
+
+function updateTimer() {
 
   if (
-    !callConnected ||
-    !currentSocket ||
-    !currentSocket.connected
+    !callActive ||
+    !callStartTime
   ) {
 
     return;
 
   }
 
+  const elapsed =
+    Math.floor(
+      (
+        Date.now() -
+        callStartTime
+      ) / 1000
+    );
 
-  const message =
-    String(
-      videoChatInput?.value ||
-      ""
-    ).trim();
+  const remaining =
+    Math.max(
+      0,
+      FREE_CALL_DURATION -
+        elapsed
+    );
 
+  const minutes =
+    Math.floor(
+      remaining / 60
+    );
+
+  const seconds =
+    remaining % 60;
+
+  if (callTimer) {
+
+    callTimer.textContent =
+      `${minutes}:${String(
+        seconds
+      ).padStart(2, "0")}`;
+
+  }
 
   if (
-    !message
+    remaining <= 0
+  ) {
+
+    endCallDueToTimeLimit();
+
+  }
+
+}
+
+
+/* =========================================================
+   STOP TIMER
+========================================================= */
+
+function stopTimer() {
+
+  if (timerInterval) {
+
+    clearInterval(
+      timerInterval
+    );
+
+  }
+
+  timerInterval =
+    null;
+
+  callStartTime =
+    null;
+
+  if (callTimer) {
+
+    callTimer.textContent =
+      "2:00";
+
+  }
+
+}
+
+
+/* =========================================================
+   BUTTON STATE
+========================================================= */
+
+function updateButtons() {
+
+  const matched =
+    Boolean(
+      RandomVideoMatcher.getRoomId()
+    );
+
+  if (nextBtn) {
+
+    nextBtn.disabled =
+      !matched ||
+      nextPending;
+
+  }
+
+  if (endCallBtn) {
+
+    endCallBtn.disabled =
+      !matched &&
+      !callActive &&
+      !searchRunning;
+
+  }
+
+  if (muteMicBtn) {
+
+    muteMicBtn.disabled =
+      !matched;
+
+  }
+
+  if (toggleCameraBtn) {
+
+    toggleCameraBtn.disabled =
+      !matched;
+
+  }
+
+  if (reportBtn) {
+
+    reportBtn.disabled =
+      !matched;
+
+  }
+
+  if (blockBtn) {
+
+    blockBtn.disabled =
+      !matched;
+
+  }
+
+}
+
+
+/* =========================================================
+   CONSUME FREE ATTEMPT
+========================================================= */
+
+async function consumeFreeAttempt() {
+
+  if (
+    freeAttemptConsumed
+  ) {
+
+    return true;
+
+  }
+
+  if (
+    getFreeCount() <= 0
+  ) {
+
+    return false;
+
+  }
+
+  const ok =
+    await decrementFreeRandomVideoChat();
+
+  if (!ok) {
+
+    return false;
+
+  }
+
+  freeAttemptConsumed =
+    true;
+
+  updateFreeUI();
+
+  return true;
+
+}
+
+
+/* =========================================================
+   START SEARCH
+========================================================= */
+
+async function startSearch(
+  message =
+    "Finding a random video person..."
+) {
+
+  if (
+    !authenticated ||
+    searchRunning
   ) {
 
     return;
 
   }
 
-
   if (
-    message.length > 500
+    getFreeCount() <= 0
   ) {
+
+    updateFreeUI();
+
+    setStatus(
+      "No free calls",
+      "Use diamonds from Wallet to continue."
+    );
 
     return;
 
   }
 
+  searchRunning =
+    true;
 
-  /*
-    Existing backend expects videoChatMessage.
-  */
-  currentSocket.emit(
-    "videoChatMessage",
-    {
+  callActive =
+    false;
 
-      message
+  clearChat();
 
-    }
+  setChatEnabled(
+    false
   );
 
+  callConnected =
+    false;
 
-  /*
-    Show own message immediately.
-  */
-  addChatMessage(
-    message,
-    "mine"
+  freeAttemptConsumed =
+    false;
+
+  nextPending =
+    false;
+
+  stopTimer();
+
+  prepareVideoUI();
+
+  showLoadingText();
+
+  if (callerName) {
+
+    callerName.textContent =
+      "Finding...";
+
+  }
+
+  if (callTimer) {
+
+    callTimer.textContent =
+      "2:00";
+
+  }
+
+  setSidebar(
+    `🔄 ${message}`
   );
 
+  updateFreeUI();
 
-  videoChatInput.value =
-    "";
+  updateButtons();
+
+  try {
+
+    await RandomVideoMatcher.startRandomVideoCall();
+
+    attachLocalStream();
+
+  } catch (error) {
+
+    console.error(
+      "Random Video search error",
+      error
+    );
+
+    searchRunning =
+      false;
+
+    callActive =
+      false;
+
+    callConnected =
+      false;
+
+    setStatus(
+      "Connection error",
+      "Check the backend server and camera/microphone permissions."
+    );
+
+    updateButtons();
+
+  }
+
+}
 
 
-  videoChatInput.focus();
+/* =========================================================
+   FINISH CALL
+========================================================= */
+
+async function finishCall(
+  message = "Call ended."
+) {
+
+  callActive =
+    false;
+
+  callConnected =
+    false;
+
+  searchRunning =
+    false;
+
+  nextPending =
+    false;
+
+  stopTimer();
+
+  await RandomVideoMatcher.endVideoCall();
+
+  prepareVideoUI();
+
+  if (remoteVideo) {
+
+    remoteVideo.srcObject =
+      null;
+
+  }
+
+  if (localVideo) {
+
+    localVideo.srcObject =
+      null;
+
+  }
+
+  clearChat();
+
+  setChatEnabled(
+    false
+  );
+
+  setStatus(
+    "Call ended",
+    message
+  );
+
+  updateButtons();
+
+}
+
+
+/* =========================================================
+   TIME LIMIT
+========================================================= */
+
+async function endCallDueToTimeLimit() {
+
+  if (!callActive) {
+
+    return;
+
+  }
+
+  await consumeFreeAttempt();
+
+  await finishCall(
+    "Your 2-minute free video call has ended."
+  );
+
+  alert(
+    "Your 2-minute free video call has ended."
+  );
+
+  if (
+    getFreeCount() <= 0
+  ) {
+
+    window.location.href =
+      "wallet.html";
+
+  }
+
+}
+
+
+/* =========================================================
+   NEXT PERSON
+========================================================= */
+
+async function nextPerson() {
+
+  if (
+    nextPending ||
+    searchRunning
+  ) {
+
+    return;
+
+  }
+
+  if (
+    getFreeCount() <= 0
+  ) {
+
+    updateFreeUI();
+
+    alert(
+      "No free video calls remaining. Please visit your wallet."
+    );
+
+    return;
+
+  }
+
+  nextPending =
+    true;
+
+  callActive =
+    false;
+
+  callConnected =
+    false;
+
+  freeAttemptConsumed =
+    false;
+
+  stopTimer();
+
+  clearChat();
+
+  setChatEnabled(
+    false
+  );
+
+  setSidebar(
+    "🔄 Finding the next random person..."
+  );
+
+  if (callerName) {
+
+    callerName.textContent =
+      "Finding...";
+
+  }
+
+  showLoadingText();
+
+  updateButtons();
+
+  try {
+
+    await RandomVideoMatcher.nextVideo();
+
+  } catch (error) {
+
+    console.error(
+      "Next video error",
+      error
+    );
+
+    nextPending =
+      false;
+
+    setStatus(
+      "Error",
+      "Could not find the next person."
+    );
+
+    updateButtons();
+
+  }
 
 }
 
 
 /* =========================================================
    MUTE
-   ========================================================= */
+========================================================= */
 
 function toggleMute() {
-
-  const stream =
-    RandomVideoMatcher.getLocalStream();
-
-
-  if (
-    !stream
-  ) {
-
-    return;
-
-  }
-
 
   isMuted =
     !isMuted;
 
-
-  const audioTracks =
-    stream.getAudioTracks();
-
-
-  audioTracks.forEach(
-    (
-      track
-    ) => {
-
-      track.enabled =
-        !isMuted;
-
-    }
+  RandomVideoMatcher.setMuted(
+    isMuted
   );
 
-
-  if (
-    muteMicBtn
-  ) {
+  if (muteMicBtn) {
 
     muteMicBtn.textContent =
       isMuted
         ? "🔇"
         : "🎤";
-
 
     muteMicBtn.style.opacity =
       isMuted
@@ -2042,52 +1361,18 @@ function toggleMute() {
 
 /* =========================================================
    CAMERA
-   ========================================================= */
+========================================================= */
 
 function toggleCamera() {
-
-  const stream =
-    RandomVideoMatcher.getLocalStream();
-
-
-  if (
-    !stream
-  ) {
-
-    return;
-
-  }
-
 
   isCameraOn =
     !isCameraOn;
 
-
-  const videoTracks =
-    stream.getVideoTracks();
-
-
-  videoTracks.forEach(
-    (
-      track
-    ) => {
-
-      track.enabled =
-        isCameraOn;
-
-    }
+  RandomVideoMatcher.setCameraEnabled(
+    isCameraOn
   );
 
-
-  if (
-    toggleCameraBtn
-  ) {
-
-    toggleCameraBtn.textContent =
-      isCameraOn
-        ? "📹"
-        : "🚫";
-
+  if (toggleCameraBtn) {
 
     toggleCameraBtn.style.opacity =
       isCameraOn
@@ -2096,15 +1381,12 @@ function toggleCamera() {
 
   }
 
-
-  if (
-    localVideo
-  ) {
+  if (localVideo) {
 
     localVideo.style.opacity =
       isCameraOn
         ? "1"
-        : "0.35";
+        : "0.5";
 
   }
 
@@ -2112,427 +1394,24 @@ function toggleCamera() {
 
 
 /* =========================================================
-   TIMER
-   ========================================================= */
-
-function startTimer() {
-
-  stopTimer();
-
-
-  callStartTime =
-    Date.now();
-
-
-  if (
-    callTimer
-  ) {
-
-    callTimer.textContent =
-      "2:00";
-
-  }
-
-
-  timerInterval =
-    setInterval(
-      () => {
-
-        if (
-          !callActive
-        ) {
-
-          stopTimer();
-
-          return;
-
-        }
-
-
-        const elapsed =
-          Math.floor(
-            (
-              Date.now() -
-              callStartTime
-            ) /
-            1000
-          );
-
-
-        const remaining =
-          Math.max(
-            0,
-            FREE_CALL_DURATION -
-            elapsed
-          );
-
-
-        const minutes =
-          Math.floor(
-            remaining / 60
-          );
-
-
-        const seconds =
-          remaining % 60;
-
-
-        if (
-          callTimer
-        ) {
-
-          callTimer.textContent =
-            `${minutes}:${String(
-              seconds
-            ).padStart(
-              2,
-              "0"
-            )}`;
-
-        }
-
-
-        if (
-          remaining <= 0
-        ) {
-
-          endCallDueToTimeLimit();
-
-        }
-
-      },
-      1000
-    );
-
-}
-
-
-/* =========================================================
-   STOP TIMER
-   ========================================================= */
-
-function stopTimer() {
-
-  if (
-    timerInterval
-  ) {
-
-    clearInterval(
-      timerInterval
-    );
-
-    timerInterval =
-      null;
-
-  }
-
-
-  callStartTime =
-    null;
-
-}
-
-
-/* =========================================================
-   TIME LIMIT
-   ========================================================= */
-
-async function endCallDueToTimeLimit() {
-
-  if (
-    !callActive
-  ) {
-
-    return;
-
-  }
-
-
-  await endCall(
-    false
-  );
-
-
-  alert(
-    "Your 2-minute free video call has ended."
-  );
-
-}
-
-
-/* =========================================================
-   END CALL
-   ========================================================= */
-
-async function endCall(
-  showMessage = true
-) {
-
-  callActive =
-    false;
-
-  callConnected =
-    false;
-
-  searching =
-    false;
-
-  stopTimer();
-
-
-  try {
-
-    await RandomVideoMatcher.endVideoCall();
-
-  } catch (
-    error
-  ) {
-
-    console.error(
-      "End video call error:",
-      error
-    );
-
-  }
-
-
-  clearVideoStreams();
-
-  setChatEnabled(
-    false
-  );
-
-
-  currentPartnerUserId =
-    null;
-
-  currentPartnerSocketId =
-    null;
-
-
-  if (
-    callerName
-  ) {
-
-    callerName.textContent =
-      "Call Ended";
-
-  }
-
-
-  showStatus(
-    "Call ended",
-    "Start Call click panni again start pannalam."
-  );
-
-
-  showSidebar(
-    "📞 Call ended. You can start another call."
-  );
-
-
-  if (
-    showMessage
-  ) {
-
-    showNotification(
-      "Video call ended."
-    );
-
-  }
-
-
-  updateButtons();
-
-}
-
-
-/* =========================================================
-   NEXT PERSON
-   ========================================================= */
-
-async function nextPerson() {
-
-  if (
-    nextInProgress ||
-    startingCall
-  ) {
-
-    return;
-
-  }
-
-
-  if (
-    getFreeCount() <= 0
-  ) {
-
-    updateFreeUsageUI();
-
-
-    alert(
-      "No free video calls remaining."
-    );
-
-
-    return;
-
-  }
-
-
-  nextInProgress =
-    true;
-
-  callActive =
-    false;
-
-  callConnected =
-    false;
-
-  searching =
-    true;
-
-
-  stopTimer();
-
-  clearVideoStreams();
-
-  clearChat();
-
-  setChatEnabled(
-    false
-  );
-
-
-  currentPartnerUserId =
-    null;
-
-  currentPartnerSocketId =
-    null;
-
-
-  showStatus(
-    "Searching...",
-    "Finding the next random person..."
-  );
-
-
-  showSidebar(
-    "🔄 Finding the next random person..."
-  );
-
-
-  showNotification(
-    "Moving to the next random person..."
-  );
-
-
-  updateButtons();
-
-
-  try {
-
-    /*
-      End current room and ask backend
-      to put this socket into next search.
-    */
-    await RandomVideoMatcher.nextVideo();
-
-
-    /*
-      Make sure local camera still exists.
-    */
-    if (
-      !RandomVideoMatcher.getLocalStream()
-    ) {
-
-      await RandomVideoMatcher.getUserMedia();
-
-    }
-
-
-    attachLocalStream();
-
-
-    /*
-      Count the new attempt.
-    */
-    countedThisCall =
-      false;
-
-
-    const updated =
-      await decrementFreeRandomVideoChat();
-
-
-    if (
-      updated
-    ) {
-
-      countedThisCall =
-        true;
-
-      updateFreeUsageUI();
-
-    }
-
-  } catch (
-    error
-  ) {
-
-    console.error(
-      "Next random video error:",
-      error
-    );
-
-
-    searching =
-      false;
-
-
-    showStatus(
-      "Error",
-      "Unable to find the next person."
-    );
-
-
-    showSidebar(
-      "❌ Unable to find the next person. Please try again."
-    );
-
-  } finally {
-
-    nextInProgress =
-      false;
-
-    updateButtons();
-
-  }
-
-}
-
-
-/* =========================================================
-   REPORT USER
-   ========================================================= */
+   REPORT
+========================================================= */
 
 async function reportUser() {
 
   if (
-    !currentPartnerUserId
+    !RandomVideoMatcher.getMatchedUser()
   ) {
 
     return;
 
   }
-
 
   const reason =
     window.prompt(
       "Why are you reporting this person?",
       "Inappropriate behaviour"
     );
-
 
   if (
     reason === null
@@ -2542,60 +1421,26 @@ async function reportUser() {
 
   }
 
-
-  const cleanReason =
-    reason.trim() ||
-    "No reason provided";
-
-
-  /*
-    Persist report using Firestore.
-  */
-  const submitted =
+  const ok =
     await RandomVideoMatcher.reportUser(
-      cleanReason
+      reason.trim() ||
+        "No reason provided"
     );
 
+  if (ok) {
 
-  /*
-    Also notify the backend session.
-  */
-  if (
-    currentSocket &&
-    currentSocket.connected
-  ) {
-
-    currentSocket.emit(
-      "reportUser",
-      {
-
-        userId:
-          currentPartnerUserId,
-
-        reason:
-          cleanReason
-
-      }
-    );
-
-  }
-
-
-  if (
-    submitted
-  ) {
-
-    showNotification(
+    alert(
       "Report submitted."
     );
 
-
-    await endCall();
+    await finishCall(
+      "Report submitted. Call ended."
+    );
 
   } else {
 
-    showNotification(
-      "Unable to submit report."
+    alert(
+      "Unable to submit the report."
     );
 
   }
@@ -2604,73 +1449,47 @@ async function reportUser() {
 
 
 /* =========================================================
-   BLOCK USER
-   ========================================================= */
+   BLOCK
+========================================================= */
 
 async function blockUser() {
 
-  if (
-    !currentPartnerUserId
-  ) {
+  const partner =
+    RandomVideoMatcher.getMatchedUser();
+
+  if (!partner) {
 
     return;
 
   }
-
 
   const confirmed =
     window.confirm(
-      "Block this person and move to another random person?"
+      "Block this person and end the call?"
     );
 
-
-  if (
-    !confirmed
-  ) {
+  if (!confirmed) {
 
     return;
 
   }
 
+  const ok =
+    await RandomVideoMatcher.blockUser();
 
-  const blocked =
-    await RandomVideoMatcher.blockUser(
-      currentPartnerUserId
-    );
+  if (ok) {
 
-
-  if (
-    currentSocket &&
-    currentSocket.connected
-  ) {
-
-    currentSocket.emit(
-      "blockUser",
-      {
-
-        userId:
-          currentPartnerUserId
-
-      }
-    );
-
-  }
-
-
-  if (
-    blocked
-  ) {
-
-    showNotification(
+    alert(
       "User blocked."
     );
 
-
-    await endCall();
+    await finishCall(
+      "User blocked. Call ended."
+    );
 
   } else {
 
-    showNotification(
+    alert(
       "Unable to block this user."
     );
 
@@ -2680,53 +1499,514 @@ async function blockUser() {
 
 
 /* =========================================================
-   BUTTON EVENTS
-   ========================================================= */
+   MATCHER EVENTS
+========================================================= */
 
-startBtn?.addEventListener(
+function bindMatcherEvents() {
+
+  RandomVideoMatcher.onMatch(
+    async (
+      partner,
+      data = {}
+    ) => {
+
+      if (data.waiting) {
+
+        searchRunning =
+          true;
+
+        callActive =
+          false;
+
+        callConnected =
+          false;
+
+        setChatEnabled(
+          false
+        );
+
+        setStatus(
+          "Finding...",
+          "Waiting for a random video-call partner..."
+        );
+
+        updateButtons();
+
+        return;
+
+      }
+
+      if (!partner) {
+
+        return;
+
+      }
+
+      searchRunning =
+        false;
+
+      callActive =
+        true;
+
+      callConnected =
+        false;
+
+      clearChat();
+
+      setChatEnabled(
+        false
+      );
+
+      nextPending =
+        false;
+
+      if (callerName) {
+
+        callerName.textContent =
+          partner.displayName ||
+          "Stranger";
+
+      }
+
+      setStatus(
+        "Person found",
+        "Random person found. Starting video..."
+      );
+
+      attachLocalStream();
+
+      startTimer();
+
+      updateButtons();
+
+      const consumed =
+        await consumeFreeAttempt();
+
+      if (!consumed) {
+
+        await finishCall(
+          "Free video-call count update failed."
+        );
+
+        alert(
+          "Unable to start the free video call."
+        );
+
+        return;
+
+      }
+
+    }
+  );
+
+
+  RandomVideoMatcher.onRemoteStream(
+    (stream) => {
+
+      attachRemoteStream(
+        stream
+      );
+
+    }
+  );
+
+
+  RandomVideoMatcher.onConnectionState(
+    (state) => {
+
+      if (
+        state ===
+        "connected"
+      ) {
+
+        callActive =
+          true;
+
+        setChatEnabled(
+          true
+        );
+
+        callConnected =
+          true;
+
+        searchRunning =
+          false;
+
+        const partner =
+          RandomVideoMatcher.getMatchedUser();
+
+        if (callerName) {
+
+          callerName.textContent =
+            partner?.displayName ||
+            "Stranger";
+
+        }
+
+        setStatus(
+          "Connected",
+          "Video call connected! Be respectful and kind."
+        );
+
+        startTimer();
+
+        updateButtons();
+
+      } else if (
+        state ===
+        "connecting"
+      ) {
+
+        setStatus(
+          callerName?.textContent ||
+            "Connecting...",
+          "Establishing video connection..."
+        );
+
+      } else if (
+        state ===
+        "failed"
+      ) {
+
+        callConnected =
+          false;
+
+        setChatEnabled(
+          false
+        );
+
+        setStatus(
+          "Connection failed",
+          "Next Person try pannunga."
+        );
+
+        updateButtons();
+
+      } else if (
+        state ===
+        "disconnected"
+      ) {
+
+        callConnected =
+          false;
+
+        setChatEnabled(
+          false
+        );
+
+        setStatus(
+          callerName?.textContent ||
+            "Disconnected",
+          "Video connection disconnected."
+        );
+
+        updateButtons();
+
+      }
+
+    }
+  );
+
+
+  RandomVideoMatcher.onChatMessage(
+    (data = {}) => {
+
+      if (
+        data.message
+      ) {
+
+        addChatMessage(
+          data.message,
+          "theirs"
+        );
+
+      }
+
+    }
+  );
+
+
+  RandomVideoMatcher.onPartnerEnded(
+    (data = {}) => {
+
+      callActive =
+        false;
+
+      setChatEnabled(
+        false
+      );
+
+      callConnected =
+        false;
+
+      searchRunning =
+        false;
+
+      stopTimer();
+
+      clearChat();
+
+      if (remoteVideo) {
+
+        remoteVideo.srcObject =
+          null;
+
+      }
+
+      setStatus(
+        "Partner left",
+        data.message ||
+          "Your partner left the call."
+      );
+
+      updateButtons();
+
+    }
+  );
+
+
+  RandomVideoMatcher.onNextReady(
+    async () => {
+
+      nextPending =
+        false;
+
+      await startSearch(
+        "Finding the next random person..."
+      );
+
+    }
+  );
+
+
+  RandomVideoMatcher.onServerError(
+    (message) => {
+
+      searchRunning =
+        false;
+
+      callActive =
+        false;
+
+      callConnected =
+        false;
+
+      nextPending =
+        false;
+
+      setStatus(
+        "Error",
+        message ||
+          "Random video server error."
+      );
+
+      updateButtons();
+
+    }
+  );
+
+
+  RandomVideoMatcher.onMediaError(
+    (error) => {
+
+      searchRunning =
+        false;
+
+      callActive =
+        false;
+
+      callConnected =
+        false;
+
+      let message =
+        "Camera and microphone permission are required.";
+
+      if (
+        error?.name ===
+        "NotAllowedError"
+      ) {
+
+        message =
+          "Camera/microphone permission denied. Allow access in the browser.";
+
+      }
+
+      if (
+        error?.name ===
+        "NotFoundError"
+      ) {
+
+        message =
+          "Camera or microphone was not found.";
+
+      }
+
+      if (
+        error?.name ===
+        "NotReadableError"
+      ) {
+
+        message =
+          "Camera or microphone is already being used by another application.";
+
+      }
+
+      setStatus(
+        "Permission required",
+        message
+      );
+
+      updateButtons();
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   MENUS
+========================================================= */
+
+function initMenus() {
+
+  mobileMenuBtn?.addEventListener(
+    "click",
+    (event) => {
+
+      event.stopPropagation();
+
+      mobileNav?.classList.toggle(
+        "show"
+      );
+
+    }
+  );
+
+
+  rewardsMenuBtn?.addEventListener(
+    "click",
+    (event) => {
+
+      event.stopPropagation();
+
+      rewardsMenu?.classList.toggle(
+        "show"
+      );
+
+      profileMenu?.classList.remove(
+        "show"
+      );
+
+    }
+  );
+
+
+  profileMenuBtn?.addEventListener(
+    "click",
+    (event) => {
+
+      event.stopPropagation();
+
+      profileMenu?.classList.toggle(
+        "show"
+      );
+
+      rewardsMenu?.classList.remove(
+        "show"
+      );
+
+    }
+  );
+
+
+  document.addEventListener(
+    "click",
+    () => {
+
+      rewardsMenu?.classList.remove(
+        "show"
+      );
+
+      profileMenu?.classList.remove(
+        "show"
+      );
+
+    }
+  );
+
+
+  document
+    .querySelectorAll(
+      ".mobile-nav-link"
+    )
+    .forEach(
+      (link) => {
+
+        link.addEventListener(
+          "click",
+          () => {
+
+            mobileNav?.classList.remove(
+              "show"
+            );
+
+          }
+        );
+
+      }
+    );
+
+}
+
+
+/* =========================================================
+   CHAT BUTTON
+========================================================= */
+
+videoChatSendBtn?.addEventListener(
   "click",
-  startCall
+  sendChatMessage
 );
 
 
-nextBtn?.addEventListener(
-  "click",
-  nextPerson
-);
+/* =========================================================
+   CHAT ENTER
+========================================================= */
 
+videoChatInput?.addEventListener(
+  "keydown",
+  (event) => {
 
-endBtn?.addEventListener(
-  "click",
-  () => {
+    if (
+      event.key ===
+      "Enter"
+    ) {
 
-    endCall();
+      event.preventDefault();
+
+      sendChatMessage();
+
+    }
 
   }
 );
 
 
-backBtn?.addEventListener(
+setChatEnabled(
+  false
+);
+
+
+/* =========================================================
+   BUTTON EVENTS
+========================================================= */
+
+endCallBtn?.addEventListener(
   "click",
-  async () => {
+  () => {
 
-    try {
-
-      await RandomVideoMatcher.endVideoCall();
-
-    } catch (
-      error
-    ) {
-
-      console.warn(
-        "Back cleanup warning:",
-        error
-      );
-
-    }
-
-
-    window.location.href =
-      "./index.html";
+    finishCall();
 
   }
 );
@@ -2744,188 +2024,33 @@ toggleCameraBtn?.addEventListener(
 );
 
 
-videoReportBtn?.addEventListener(
+nextBtn?.addEventListener(
+  "click",
+  nextPerson
+);
+
+
+reportBtn?.addEventListener(
   "click",
   reportUser
 );
 
 
-videoBlockBtn?.addEventListener(
+blockBtn?.addEventListener(
   "click",
   blockUser
 );
 
 
 /* =========================================================
-   CHAT SEND
-   ========================================================= */
-
-videoChatSendBtn?.addEventListener(
-  "click",
-  sendChatMessage
-);
-
-
-videoChatInput?.addEventListener(
-  "keydown",
-  (
-    event
-  ) => {
-
-    if (
-      event.key ===
-      "Enter"
-    ) {
-
-      event.preventDefault();
-
-      sendChatMessage();
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   MOBILE MENU
-   ========================================================= */
-
-mobileMenuBtn?.addEventListener(
-  "click",
-  (
-    event
-  ) => {
-
-    event.stopPropagation();
-
-    mobileNav?.classList.toggle(
-      "show"
-    );
-
-  }
-);
-
-
-/* =========================================================
-   REWARDS MENU
-   ========================================================= */
-
-rewardsMenuBtn?.addEventListener(
-  "click",
-  (
-    event
-  ) => {
-
-    event.stopPropagation();
-
-    rewardsMenu?.classList.toggle(
-      "show"
-    );
-
-    profileMenu?.classList.remove(
-      "show"
-    );
-
-  }
-);
-
-
-/* =========================================================
-   PROFILE MENU
-   ========================================================= */
-
-profileMenuBtn?.addEventListener(
-  "click",
-  (
-    event
-  ) => {
-
-    event.stopPropagation();
-
-    profileMenu?.classList.toggle(
-      "show"
-    );
-
-    rewardsMenu?.classList.remove(
-      "show"
-    );
-
-  }
-);
-
-
-/* =========================================================
-   CLOSE DROPDOWNS
-   ========================================================= */
-
-document.addEventListener(
-  "click",
-  () => {
-
-    rewardsMenu?.classList.remove(
-      "show"
-    );
-
-    profileMenu?.classList.remove(
-      "show"
-    );
-
-  }
-);
-
-
-/* =========================================================
-   MOBILE NAV
-   ========================================================= */
-
-document
-  .querySelectorAll(
-    ".mobile-nav-link"
-  )
-  .forEach(
-    (
-      link
-    ) => {
-
-      link.addEventListener(
-        "click",
-        () => {
-
-          mobileNav?.classList.remove(
-            "show"
-          );
-
-        }
-      );
-
-    }
-  );
-
-
-/* =========================================================
    LOGOUT
-   ========================================================= */
+========================================================= */
 
 dropdownLogoutBtn?.addEventListener(
   "click",
   async () => {
 
-    try {
-
-      await RandomVideoMatcher.endVideoCall();
-
-    } catch (
-      error
-    ) {
-
-      console.warn(
-        "Video logout cleanup warning:",
-        error
-      );
-
-    }
-
+    await RandomVideoMatcher.endVideoCall();
 
     await handleLogout();
 
@@ -2937,21 +2062,7 @@ mobileLogoutBtn?.addEventListener(
   "click",
   async () => {
 
-    try {
-
-      await RandomVideoMatcher.endVideoCall();
-
-    } catch (
-      error
-    ) {
-
-      console.warn(
-        "Video logout cleanup warning:",
-        error
-      );
-
-    }
-
+    await RandomVideoMatcher.endVideoCall();
 
     await handleLogout();
 
@@ -2960,15 +2071,117 @@ mobileLogoutBtn?.addEventListener(
 
 
 /* =========================================================
+   INIT MENUS
+========================================================= */
+
+initMenus();
+
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+protectPage().then(
+  (success) => {
+
+    if (!success) {
+
+      return;
+
+    }
+
+    onAuthReady(
+      async (
+        user,
+        profile
+      ) => {
+
+        if (
+          !user ||
+          !profile
+        ) {
+
+          return;
+
+        }
+
+        authenticated =
+          true;
+
+        updateUserUI();
+
+        updateFreeUI();
+
+        prepareVideoUI();
+
+        bindMatcherEvents();
+
+        try {
+
+          await RandomVideoMatcher.ensureSocket();
+
+          updateButtons();
+
+          if (
+            getFreeCount() > 0
+          ) {
+
+            setTimeout(
+              () => {
+
+                startSearch(
+                  "Finding a random video person..."
+                );
+
+              },
+              300
+            );
+
+          } else {
+
+            setStatus(
+              "No free calls",
+              "Use diamonds from Wallet to continue."
+            );
+
+            updateButtons();
+
+          }
+
+        } catch (error) {
+
+          console.error(
+            "Socket initialization error",
+            error
+          );
+
+          setStatus(
+            "Offline",
+            "ConnectNow server connection failed."
+          );
+
+          updateButtons();
+
+        }
+
+      }
+    );
+
+  }
+);
+
+
+/* =========================================================
    RESIZE
-   ========================================================= */
+========================================================= */
 
 window.addEventListener(
   "resize",
   () => {
 
     if (
-      window.innerWidth > 900
+      window.innerWidth >
+      900
     ) {
 
       mobileNav?.classList.remove(
@@ -2983,26 +2196,19 @@ window.addEventListener(
 
 /* =========================================================
    BEFORE UNLOAD
-   ========================================================= */
+========================================================= */
 
 window.addEventListener(
   "beforeunload",
   () => {
 
+    stopTimer();
+
     try {
 
       RandomVideoMatcher.disconnect();
 
-    } catch (
-      error
-    ) {
-
-      console.warn(
-        "Random Video cleanup warning:",
-        error
-      );
-
-    }
+    } catch {}
 
   }
 );

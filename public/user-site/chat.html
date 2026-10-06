@@ -6,6 +6,7 @@
   <title>ConnectNow - Random Chat</title>
   <link rel="stylesheet" href="./css/style.css" />
   <link rel="stylesheet" href="./css/chat.css" />
+
   <style>
     .chat-container {
       display: flex;
@@ -17,13 +18,13 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      background: #f5f8fc;
+      background: #0b1f3a;
     }
 
     .chat-header {
-      background: white;
+      background: #0f2747;
       padding: 20px;
-      border-bottom: 1px solid #e7ebf2;
+      border-bottom: 1px solid #29476a;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -31,7 +32,7 @@
 
     .chat-header h2 {
       font-size: 20px;
-      color: #162033;
+      color: #ffffff;
     }
 
     .free-count {
@@ -67,31 +68,77 @@
     }
 
     .message.other {
-      background: white;
-      color: #162033;
+      background: #1d3557;
+      color: #ffffff;
       margin-right: auto;
     }
 
     .chat-input-area {
       padding: 20px;
-      background: white;
-      border-top: 1px solid #e7ebf2;
+      background: #0f2747;
+      border-top: 1px solid #29476a;
       display: flex;
       gap: 12px;
     }
 
     .chat-input {
       flex: 1;
-      border: 1px solid #e7ebf2;
+      border: 1px solid #385a7d;
       border-radius: 12px;
       padding: 12px 16px;
       font-size: 14px;
       outline: none;
+      background: #102a43;
+      color: #ffffff;
       transition: border-color 0.3s;
+    }
+
+    .chat-input::placeholder {
+      color: #9fb3c8;
     }
 
     .chat-input:focus {
       border-color: var(--primary);
+    }
+
+    .attach-btn {
+      background: #16385e;
+      color: #ffffff;
+      border: 1px solid #385a7d;
+      border-radius: 12px;
+      width: 48px;
+      padding: 0;
+      font-size: 20px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .attach-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      background: #1d4a78;
+    }
+
+    .attach-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .message-image {
+      display: block;
+      max-width: 260px;
+      max-height: 260px;
+      width: auto;
+      height: auto;
+      margin-top: 6px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .file-name {
+      display: block;
+      margin-top: 6px;
+      font-size: 12px;
+      opacity: 0.8;
     }
 
     .send-btn {
@@ -113,8 +160,8 @@
       display: flex;
       gap: 12px;
       padding: 20px;
-      background: white;
-      border-top: 1px solid #e7ebf2;
+      background: #0f2747;
+      border-top: 1px solid #29476a;
       flex-wrap: wrap;
     }
 
@@ -122,10 +169,10 @@
       flex: 1;
       min-width: 100px;
       padding: 12px 16px;
-      border: 1px solid #e7ebf2;
+      border: 1px solid #385a7d;
       border-radius: 12px;
-      background: white;
-      color: #162033;
+      background: #132f4c;
+      color: #ffffff;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s;
@@ -149,12 +196,12 @@
     .loading {
       text-align: center;
       padding: 40px;
-      color: #5f6b7f;
+      color: #b8c4d9;
     }
 
     .spinner {
-      border: 4px solid #e7ebf2;
-      border-top: 4px solid var(--primary);
+      border: 4px solid #29476a;
+      border-top: 4px solid #60a5fa;
       border-radius: 50%;
       width: 40px;
       height: 40px;
@@ -163,8 +210,13 @@
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     .usage-warning {
@@ -194,6 +246,20 @@
         padding: 10px 12px;
         font-size: 13px;
       }
+
+      .chat-input-area {
+        padding: 12px;
+        gap: 8px;
+      }
+
+      .attach-btn {
+        width: 44px;
+        min-width: 44px;
+      }
+
+      .send-btn {
+        padding: 12px 16px;
+      }
     }
   </style>
 </head>
@@ -218,20 +284,30 @@
       <a href="chat.html" class="nav-link active">Random Chat</a>
       <a href="video-call.html" class="nav-link">Video Call</a>
       <a href="group-chat.html" class="nav-link">Group Chat</a>
-      <a href="wallet.html" class="nav-link wallet-link"><span>💎</span> Wallet</a>
+      <a href="wallet.html" class="nav-link wallet-link">
+        <span>💎</span> Wallet
+      </a>
 
       <div class="nav-dropdown">
         <button type="button" class="nav-dropdown-btn" id="rewardsMenuBtn">
           Rewards <span class="dropdown-arrow">⌄</span>
         </button>
+
         <div class="dropdown-menu" id="rewardsMenu">
           <a href="daily-reward.html" class="dropdown-item">
             <span class="dropdown-icon">🎁</span>
-            <span><strong>Daily Reward</strong><small>Claim your daily reward</small></span>
+            <span>
+              <strong>Daily Reward</strong>
+              <small>Claim your daily reward</small>
+            </span>
           </a>
+
           <a href="daily-tasks.html" class="dropdown-item">
             <span class="dropdown-icon">✅</span>
-            <span><strong>Daily Tasks</strong><small>Complete tasks and earn diamonds</small></span>
+            <span>
+              <strong>Daily Tasks</strong>
+              <small>Complete tasks and earn diamonds</small>
+            </span>
           </a>
         </div>
       </div>
@@ -246,6 +322,7 @@
         <div class="dropdown-menu profile-dropdown" id="profileMenu">
           <div class="dropdown-profile-header">
             <div class="dropdown-large-avatar" id="dropdownUserAvatar">C</div>
+
             <div>
               <strong id="dropdownUserName">ConnectNow User</strong>
               <small id="dropdownUserEmail">user@example.com</small>
@@ -254,22 +331,40 @@
 
           <a href="profile.html" class="dropdown-item">
             <span class="dropdown-icon">👤</span>
-            <span><strong>My Profile</strong><small>View and edit your profile</small></span>
+            <span>
+              <strong>My Profile</strong>
+              <small>View and edit your profile</small>
+            </span>
           </a>
 
-          <button type="button" class="dropdown-item logout-dropdown-item" id="dropdownLogoutBtn">
+          <button
+            type="button"
+            class="dropdown-item logout-dropdown-item"
+            id="dropdownLogoutBtn"
+          >
             <span class="dropdown-icon">🚪</span>
-            <span><strong>Logout</strong><small>Sign out from ConnectNow</small></span>
+            <span>
+              <strong>Logout</strong>
+              <small>Sign out from ConnectNow</small>
+            </span>
           </button>
         </div>
       </div>
     </nav>
 
-    <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">☰</button>
+    <button
+      type="button"
+      class="mobile-menu-btn"
+      id="mobileMenuBtn"
+      aria-label="Open menu"
+    >
+      ☰
+    </button>
 
   </header>
 
   <!-- Mobile Navigation -->
+
   <div class="mobile-nav" id="mobileNav">
     <a href="index.html" class="mobile-nav-link">🏠 Home</a>
     <a href="chat.html" class="mobile-nav-link active">💬 Random Chat</a>
@@ -279,7 +374,14 @@
     <a href="daily-reward.html" class="mobile-nav-link">🎁 Daily Reward</a>
     <a href="daily-tasks.html" class="mobile-nav-link">✅ Daily Tasks</a>
     <a href="profile.html" class="mobile-nav-link">👤 My Profile</a>
-    <button type="button" class="mobile-nav-link mobile-logout" id="mobileLogoutBtn">🚪 Logout</button>
+
+    <button
+      type="button"
+      class="mobile-nav-link mobile-logout"
+      id="mobileLogoutBtn"
+    >
+      🚪 Logout
+    </button>
   </div>
 
   <!-- =====================================================
@@ -288,17 +390,48 @@
 
   <div class="chat-container">
     <div class="chat-main">
+
       <div class="chat-header">
         <h2>💬 Random Chat</h2>
-        <div class="free-count" id="freeChatStatus">Free: <span id="freeCountDisplay">10</span>/10</div>
+
+        <div class="free-count" id="freeChatStatus">
+          Free:
+          <span id="freeCountDisplay">10</span>/10
+        </div>
       </div>
 
       <!-- Usage Warning -->
-      <div id="usageWarning" class="usage-warning" style="display: none; margin: 0 20px 20px; margin-top: 20px;">
+
+      <div
+        id="usageWarning"
+        class="usage-warning"
+        style="
+          display: none;
+          margin: 0 20px 20px;
+          margin-top: 20px;
+        "
+      >
         <strong>⚠️ No Free Chats Remaining!</strong>
-        <p>You've used all your free random chat connections. Use diamonds from your wallet to continue, or come back tomorrow for more free uses!</p>
-        <a href="wallet.html" style="color: #b45309; text-decoration: underline; font-weight: 600;">Go to Wallet</a>
+
+        <p>
+          You've used all your free random chat connections.
+          Use diamonds from your wallet to continue, or come back
+          tomorrow for more free uses!
+        </p>
+
+        <a
+          href="wallet.html"
+          style="
+            color: #b45309;
+            text-decoration: underline;
+            font-weight: 600;
+          "
+        >
+          Go to Wallet
+        </a>
       </div>
+
+      <!-- Messages -->
 
       <div id="chatMessages" class="chat-messages">
         <div class="loading">
@@ -307,18 +440,104 @@
         </div>
       </div>
 
+      <!-- Input Area -->
+
       <div class="chat-input-area">
-        <input type="text" class="chat-input" id="messageInput" placeholder="Type your message..." />
-        <button class="send-btn" id="sendBtn">Send</button>
+
+        <!-- Hidden file selector -->
+
+        <input
+          type="file"
+          id="fileInput"
+          accept="image/*"
+          hidden
+        />
+
+        <!-- File / Photo Button -->
+
+        <button
+          type="button"
+          class="attach-btn"
+          id="attachBtn"
+          aria-label="Add photo"
+          title="Add photo"
+          disabled
+        >
+          📎
+        </button>
+
+        <!-- Text Input -->
+
+        <input
+          type="text"
+          class="chat-input"
+          id="messageInput"
+          placeholder="Type your message..."
+        />
+
+        <!-- Send -->
+
+        <button
+          type="button"
+          class="send-btn"
+          id="sendBtn"
+        >
+          Send
+        </button>
+
       </div>
 
+      <!-- Actions -->
+
       <div class="chat-actions">
-        <button class="action-btn" id="stopChatBtn">Stop Chat</button>
-        <button class="action-btn" id="reportBtn">Report</button>
-        <button class="action-btn" id="blockBtn">Block</button>
-        <button class="action-btn next-btn" id="nextBtn">Next Person</button>
-        <a href="index.html" class="action-btn" style="display: flex; align-items: center; justify-content: center; text-decoration: none;">Home</a>
+
+        <button
+          type="button"
+          class="action-btn"
+          id="stopChatBtn"
+        >
+          Stop Chat
+        </button>
+
+        <button
+          type="button"
+          class="action-btn"
+          id="reportBtn"
+        >
+          Report
+        </button>
+
+        <button
+          type="button"
+          class="action-btn"
+          id="blockBtn"
+        >
+          Block
+        </button>
+
+        <button
+          type="button"
+          class="action-btn next-btn"
+          id="nextBtn"
+        >
+          Next Person
+        </button>
+
+        <a
+          href="index.html"
+          class="action-btn"
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+          "
+        >
+          Home
+        </a>
+
       </div>
+
     </div>
   </div>
 
@@ -326,7 +545,10 @@
        JAVASCRIPT
        ===================================================== -->
 
-  <script type="module" src="./js/chat-page.js"></script>
+  <script
+    type="module"
+    src="./js/chat-page.js"
+  ></script>
 
 </body>
-</html>
+</html >

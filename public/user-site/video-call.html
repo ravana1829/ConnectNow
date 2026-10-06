@@ -269,6 +269,229 @@
     0 5px 18px
     rgba(180, 55, 220, 0.28);
 }
+
+    /* =====================================================
+       RANDOM VIDEO - FINAL CLEAN VC LAYOUT
+    ===================================================== */
+    .video-container {
+      width:100%;
+      height:calc(100vh - 80px);
+      padding:10px;
+      box-sizing:border-box;
+      background:#000;
+      display:flex;
+    }
+    .video-window {
+      position:relative;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      background:#050505;
+      border-radius:12px;
+    }
+    .video-feed {
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      background:#000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+    .video-feed video {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      background:#000;
+    }
+    #remoteVideoPlaceholder {
+      position:absolute;
+      z-index:2;
+      color:rgba(255,255,255,.75);
+      font-size:14px;
+      pointer-events:none;
+    }
+    .call-header {
+      position:absolute;
+      top:14px;
+      left:14px;
+      z-index:30;
+      padding:8px 12px;
+      border-radius:8px;
+      background:rgba(0,0,0,.55);
+      color:#fff;
+      font-size:14px;
+    }
+    .call-timer {
+      position:absolute;
+      top:14px;
+      left:50%;
+      transform:translateX(-50%);
+      z-index:30;
+      min-width:64px;
+      text-align:center;
+      padding:8px 12px;
+      border-radius:8px;
+      background:rgba(0,0,0,.55);
+      color:#fff;
+      font-size:16px;
+      font-weight:700;
+    }
+    .free-video-badge {
+      position:absolute;
+      top:14px;
+      right:14px;
+      z-index:30;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:88px;
+      height:36px;
+      padding:0 14px;
+      box-sizing:border-box;
+      border-radius:20px;
+      background:linear-gradient(135deg,#8b3df0,#e83e91);
+      color:#fff;
+      font-size:14px;
+      font-weight:700;
+      white-space:nowrap;
+      box-shadow:0 5px 18px rgba(180,55,220,.28);
+    }
+    .local-video {
+      position:absolute;
+      top:62px;
+      right:14px;
+      z-index:25;
+      width:145px;
+      height:105px;
+      background:#111;
+      border-radius:12px;
+      border:2px solid rgba(255,255,255,.25);
+      overflow:hidden;
+      box-sizing:border-box;
+    }
+    .local-video video {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    #videoChatMessages {
+      position:absolute;
+      left:16px;
+      bottom:64px;
+      z-index:40;
+      width:min(380px,45vw);
+      max-height:190px;
+      overflow-y:auto;
+      display:flex;
+      flex-direction:column;
+      gap:5px;
+      pointer-events:none;
+      scrollbar-width:none;
+    }
+    #videoChatMessages::-webkit-scrollbar { display:none; }
+    .video-chat-message {
+      width:fit-content;
+      max-width:100%;
+      padding:6px 10px;
+      border-radius:8px;
+      background:rgba(0,0,0,.62);
+      color:#fff;
+      font-size:13px;
+      line-height:1.35;
+      word-break:break-word;
+    }
+    .video-chat-message.mine { background:rgba(124,58,237,.82); }
+    .video-chat-message.theirs { background:rgba(0,0,0,.62); }
+    .video-bottom-line {
+      position:absolute;
+      left:14px;
+      right:14px;
+      bottom:14px;
+      z-index:50;
+      display:flex;
+      align-items:center;
+      gap:7px;
+      flex-wrap:nowrap;
+      white-space:nowrap;
+    }
+    .video-chat-input-wrap {
+      flex:1 1 auto;
+      min-width:0;
+      height:38px;
+      display:flex;
+      align-items:center;
+      background:rgba(0,0,0,.72);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:8px;
+      overflow:hidden;
+    }
+    #videoChatInput {
+      flex:1 1 auto;
+      min-width:0;
+      height:100%;
+      border:0;
+      outline:0;
+      background:transparent;
+      color:#fff;
+      padding:0 11px;
+      font-size:13px;
+    }
+    #videoChatInput::placeholder { color:rgba(255,255,255,.58); }
+    .video-chat-send-btn {
+      flex:0 0 38px;
+      width:38px;
+      height:38px;
+      border:0;
+      background:#7c3aed;
+      color:#fff;
+      cursor:pointer;
+      font-size:16px;
+    }
+    .video-chat-send-btn:disabled { opacity:.45; cursor:not-allowed; }
+    .vc-text-btn {
+      flex:0 0 auto;
+      height:38px;
+      padding:0 12px;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:8px;
+      background:rgba(0,0,0,.72);
+      color:#fff;
+      font-size:12px;
+      font-weight:600;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      box-sizing:border-box;
+    }
+    .vc-text-btn:hover:not(:disabled) { background:rgba(124,58,237,.85); }
+    .vc-text-btn:disabled { opacity:.45; cursor:not-allowed; }
+    .end-btn:hover:not(:disabled) { background:rgba(220,75,85,.9); }
+    .vc-hidden-support { display:none !important; }
+    @media (max-width:900px) {
+      .video-container { height:calc(100vh - 70px); padding:6px; }
+      .video-bottom-line { left:8px; right:8px; bottom:8px; gap:4px; }
+      .vc-text-btn { height:34px; padding:0 8px; font-size:10px; }
+      .video-chat-input-wrap { height:34px; }
+      .video-chat-send-btn { width:34px; height:34px; }
+      #videoChatMessages { left:9px; bottom:50px; width:min(310px,55vw); max-height:145px; }
+      .local-video { top:56px; right:9px; width:105px; height:76px; }
+      .free-video-badge { top:9px; right:9px; height:32px; min-width:80px; font-size:12px; }
+      .call-header { top:9px; left:9px; }
+      .call-timer { top:9px; }
+    }
+    @media (max-width:560px) {
+      .video-bottom-line { gap:3px; }
+      .vc-text-btn { padding:0 6px; font-size:9px; }
+      #videoChatMessages { width:58vw; }
+      .local-video { width:88px; height:64px; }
+    }
+
   </style>
 </head>
 
@@ -610,215 +833,46 @@
 
   <div class="video-container">
 
-    <!-- ===================================================
-         MAIN VIDEO WINDOW
-         =================================================== -->
+    <div class="video-window" id="videoWindow">
 
-    <div
-      class="video-window"
-      id="videoWindow"
-    >
-
-      <!-- Remote Video -->
-
-      <div
-        class="video-feed"
-        id="videoFeed"
-      >
-
-        <video
-          id="remoteVideo"
-          autoplay
-          playsinline
-        ></video>
-
-        <span
-          id="remoteVideoPlaceholder"
-        >
-          Loading video feed...
-        </span>
-
+      <div class="video-feed" id="videoFeed">
+        <video id="remoteVideo" autoplay playsinline></video>
+        <span id="remoteVideoPlaceholder">Loading video feed...</span>
       </div>
 
-
-      <!-- Local Video -->
-
-      <video
-        id="localVideo"
-        autoplay
-        muted
-        playsinline
-      ></video>
-
-
-      <!-- Call Header -->
-
-      <div
-        class="call-header"
-        id="callHeader"
-      >
-
-        <strong
-          id="callerName"
-        >
-          Connecting...
-        </strong>
-
+      <div class="call-header" id="callHeader">
+        <strong id="callerName">Finding...</strong>
       </div>
 
+      <div class="call-timer" id="callTimer">2:00</div>
 
-      <!-- Timer -->
-
-      <div
-        class="call-timer"
-        id="callTimer"
-      >
-        2:00
+      <div class="free-video-badge" id="freeVideoBadge" aria-label="Free video calls remaining">
+        Free: 10/10
       </div>
 
+      <div class="local-video" id="localVideo"></div>
 
-      <!-- Call Actions -->
+      <div id="videoChatMessages" class="video-chat-messages" aria-live="polite"></div>
 
-      <div
-        class="call-actions"
-        id="callActions"
-      >
+      <div class="video-bottom-line">
+        <div class="video-chat-input-wrap">
+          <input type="text" id="videoChatInput" placeholder="Type message..." maxlength="500" autocomplete="off" disabled />
+          <button type="button" id="videoChatSendBtn" class="video-chat-send-btn" title="Send" aria-label="Send" disabled>➤</button>
+        </div>
 
-        <button
-          class="call-btn"
-          id="muteMicBtn"
-          title="Mute / Unmute"
-          disabled
-        >
-          🎤
-        </button>
-
-
-        <button
-          class="call-btn end-call-btn"
-          id="endCallBtn"
-          title="End Call"
-          disabled
-        >
-          📞
-        </button>
-
-
-        <button
-          class="call-btn"
-          id="toggleCameraBtn"
-          title="Camera On / Off"
-          disabled
-        >
-          📹
-        </button>
-
+        <button type="button" class="vc-text-btn end-btn" id="endCallBtn" disabled>End</button>
+        <button type="button" class="vc-text-btn" id="nextBtn" disabled>Next</button>
+        <button type="button" class="vc-text-btn" id="reportBtn" disabled>Report</button>
+        <button type="button" class="vc-text-btn" id="blockBtn" disabled>Block</button>
+        <a href="index.html" class="vc-text-btn home-btn">Home</a>
       </div>
+
+      <!-- Existing JS support elements kept hidden -->
+      <div id="noFreeWarning" class="vc-hidden-support" style="display:none;"></div>
+      <div id="timeLimitWarning" class="vc-hidden-support" style="display:none;"></div>
+      <div id="sidebarContent" class="vc-hidden-support"></div>
 
     </div>
-
-
-    <!-- ===================================================
-         RIGHT SIDEBAR
-         =================================================== -->
-
-    <div
-      class="right-sidebar"
-      id="rightSidebar"
-    >
-
-      <div class="sidebar-header">
-        Call Options
-      </div>
-
-
-      <!-- No free calls -->
-
-      <div
-        id="noFreeWarning"
-        class="no-free-warning"
-        style="display: none;"
-      >
-
-        <strong>
-          No free video calls remaining!
-        </strong>
-
-        <p>
-          Use diamonds from your wallet to continue.
-        </p>
-
-      </div>
-
-
-      <!-- Time limit -->
-
-      <div
-        id="timeLimitWarning"
-        class="time-limit-warning"
-        style="display: none;"
-      >
-        ⏱️ Free video calls are limited to 2 minutes
-      </div>
-
-
-      <!-- Sidebar content -->
-
-      <div
-        class="sidebar-content"
-        id="sidebarContent"
-      >
-
-        <p>
-          📞 Waiting for connection...
-        </p>
-
-      </div>
-
-
-      <!-- Sidebar actions -->
-
-      <div class="sidebar-actions">
-
-        <button
-          class="action-btn"
-          id="nextBtn"
-          disabled
-        >
-          ➜ Next Person
-        </button>
-
-
-        <button
-          class="action-btn"
-          id="reportBtn"
-          disabled
-        >
-          ⚠️ Report
-        </button>
-
-
-        <button
-          class="action-btn"
-          id="blockBtn"
-          disabled
-        >
-          🚫 Block
-        </button>
-
-
-        <a
-          href="index.html"
-          class="action-btn"
-          style="text-align: center;"
-        >
-          🏠 Go Home
-        </a>
-
-      </div>
-
-    </div>
-
   </div>
 
 
@@ -826,7 +880,16 @@
        SOCKET.IO
        ===================================================== -->
 
-  <script src="http://localhost:5000/socket.io/socket.io.js"></script>
+  <!-- SOCKET.IO -->
+  <script
+    src="https://cdn.socket.io/4.8.3/socket.io.min.js"
+    crossorigin="anonymous"
+  ></script>
+
+  <script>
+    window.CONNECTNOW_SOCKET_URL =
+      "https://connectnow-n26j.onrender.com";
+  </script>
 
 
   <!-- =====================================================
